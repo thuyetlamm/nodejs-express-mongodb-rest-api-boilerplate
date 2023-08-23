@@ -1,15 +1,13 @@
 const mongoose = require("mongoose");
 
-const uri =
-  "mongodb+srv://thuyetlam101:1gwmPMfqgwIAsZOV@cluster0.pifuz.mongodb.net/?retryWrites=true&w=majority";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 
 export async function connect() {
   try {
-    const client = await mongoose.connect(uri, {
+    const client = await mongoose.connect(process.env.MONGODB_URI, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
-      dbName: "motel",
+      dbName: process.env.DATABASE_NAME,
     });
     console.log("Connected successfully");
   } catch (error) {

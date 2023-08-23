@@ -52,7 +52,7 @@ class CustomerController {
         });
       }
     } catch (error) {
-      res.status(404).json({
+      res.status(500).json({
         message: new Error(error).message,
       });
     }

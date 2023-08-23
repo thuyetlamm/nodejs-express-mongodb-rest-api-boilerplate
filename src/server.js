@@ -2,6 +2,8 @@ import express from "express";
 
 import morgan from "morgan";
 
+import "dotenv/config";
+
 import { engine } from "express-handlebars";
 import { connect } from "./config/mongodb";
 
@@ -10,9 +12,6 @@ const path = require("path");
 const route = require("./routes/v1");
 
 const app = express();
-
-const hostname = "localhost";
-const port = 8017;
 
 // DB connection
 
@@ -38,7 +37,9 @@ app.set("views", path.join(__dirname, "resources/views"));
 // ROUTER
 route(app);
 
-app.listen(port, hostname, () => {
+app.listen(process.env.APP_PORT || 3001, process.env.APP_HOST, () => {
   // eslint-disable-next-line no-console
-  console.log(`Hello Thuyet Lam Dev, I am running at ${hostname}:${port}/`);
+  console.log(
+    `Hello Thuyet Lam Dev, I am running at ${process.env.APP_HOST}:${process.env.APP_PORT}/`
+  );
 });
