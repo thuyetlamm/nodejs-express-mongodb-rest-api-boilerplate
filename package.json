@@ -6,7 +6,7 @@
   "author": "TrungQuanDev - Một Lập Trình Viên",
   "description": "https://youtube.com/@trungquandev",
   "engines": {
-    "node": ">=16.0.0"
+    "node": "16.0.0"
   },
   "scripts": {
     "lint": "eslint src --ext js --report-unused-disable-directives --max-warnings 0",
