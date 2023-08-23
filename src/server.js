@@ -1,32 +1,44 @@
-/**
- * Updated by trungquandev.com's author on August 17 2023
- * YouTube: https://youtube.com/@trungquandev
- * "A bit of fragrance clings to the hand that gives flowers!"
- */
+import express from "express";
 
-import express from 'express'
-import { mapOrder } from '~/utils/sorts.js'
+import morgan from "morgan";
 
-const app = express()
+import { engine } from "express-handlebars";
+import { connect } from "./config/mongodb";
 
-const hostname = 'localhost'
-const port = 8017
+const path = require("path");
 
-app.get('/', (req, res) => {
-  // Test Absolute import mapOrder
-  console.log(mapOrder(
-    [ { id: 'id-1', name: 'One' },
-      { id: 'id-2', name: 'Two' },
-      { id: 'id-3', name: 'Three' },
-      { id: 'id-4', name: 'Four' },
-      { id: 'id-5', name: 'Five' } ],
-    ['id-5', 'id-4', 'id-2', 'id-3', 'id-1'],
-    'id'
-  ))
-  res.end('<h1>Hello World!</h1><hr>')
-})
+const route = require("./routes/v1");
+
+const app = express();
+
+const hostname = "localhost";
+const port = 8017;
+
+// DB connection
+
+connect().catch(console.log);
+
+// PARSE JSON body
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// LOGGER HTTP
+app.use(morgan("combined"));
+
+// CUSTOM PREFIX
+app.engine(
+  "hbs",
+  engine({
+    extname: ".hbs",
+  })
+);
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname, "resources/views"));
+
+// ROUTER
+route(app);
 
 app.listen(port, hostname, () => {
   // eslint-disable-next-line no-console
-  console.log(`Hello Trung Quan Dev, I am running at ${ hostname }:${ port }/`)
-})
+  console.log(`Hello Thuyet Lam Dev, I am running at ${hostname}:${port}/`);
+});
