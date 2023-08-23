@@ -3,6 +3,7 @@ import { Schema, model } from "mongoose";
 const User = new Schema(
   {
     fullname: { type: String, maxLength: 50 },
+    username: { type: String, maxLength: 50, unique: true },
     email: { type: String, maxLength: 100, unique: true },
     password: { type: String },
     type: { type: Number, default: 1 },

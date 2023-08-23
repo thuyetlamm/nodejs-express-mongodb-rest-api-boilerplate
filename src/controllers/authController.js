@@ -9,20 +9,33 @@ import {
 
 const jwt = require("jsonwebtoken");
 
+const regex =
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
 class AuthController {
   //[POST] /auth/login
   async login(req, res, next) {
     try {
-      const { email, password } = req.body;
+      const { username, password } = req.body;
 
-      const user = await Users.findOne({ email });
+      const isEmail = regex.test(username);
+
+      const query = {};
+
+      if (isEmail) {
+        query["email"] = username;
+      } else {
+        query["username"] = username;
+      }
+
+      const user = await Users.findOne(query);
 
       // chec
 
       if (!user) {
         return res.status(401).json({
           error: 1,
-          message: "Email is incorrect",
+          message: "Account is incorrect",
         });
       }
 
@@ -90,11 +103,12 @@ class AuthController {
       const verify = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const user = await Users.findOne({ _id: verify?._id });
 
-      const { type, fullname, email, status, _id } = user;
+      const { type, fullname, email, status, _id, username } = user;
       res.status(200).json({
         status: 200,
         data: {
           _id,
+          username,
           type,
           fullname,
           email,

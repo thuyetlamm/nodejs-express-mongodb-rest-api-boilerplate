@@ -56,16 +56,26 @@ class UserController {
   //[POST] /user/create
   async store(req, res, next) {
     try {
-      const { fullname, password, email, type, status } = req.body;
+      const { fullname, password, email, type, status, username } = req.body;
 
       // CHECK Email  Exists
-
-      const userExistWithEmail = await Users.findOne({ email: email });
+      // QUERY OBJECTS
+      const query = {
+        $or: [
+          {
+            username: username,
+          },
+          {
+            email: email,
+          },
+        ],
+      };
+      const userExistWithEmail = await Users.findOne(query);
 
       if (userExistWithEmail) {
         res.status(200).json({
           error: true,
-          message: "Email already exists",
+          message: "Account or Email already exists",
         });
         return;
       }
@@ -74,6 +84,7 @@ class UserController {
 
       const payload = {
         fullname,
+        username,
         email,
         type,
         status,
@@ -96,11 +107,12 @@ class UserController {
   //[PUT] /user/create/:id
   async update(req, res, next) {
     try {
-      const { fullname, email, type, status } = req.body;
+      const { fullname, email, type, status, username } = req.body;
       const { id } = req.params;
 
       const payload = {
         fullname,
+        username,
         email,
         type,
         status,

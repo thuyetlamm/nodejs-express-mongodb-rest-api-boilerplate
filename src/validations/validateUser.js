@@ -4,6 +4,7 @@ import * as yup from "yup";
 const createSchema = yup.object({
   body: yup.object({
     fullname: yup.string().trim().min(10).required("The name is required"),
+    username: yup.string().trim().min(10).required("The name is required"),
     password: yup.string().min(6).required("The password is required"),
     email: yup
       .string()
@@ -18,6 +19,7 @@ const createSchema = yup.object({
 const updateSchema = yup.object({
   body: yup.object({
     fullname: yup.string().trim().min(10).required("The name is required"),
+    username: yup.string().trim().min(10).required("The name is required"),
     email: yup
       .string()
       .trim()
