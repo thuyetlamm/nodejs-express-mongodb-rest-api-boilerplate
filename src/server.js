@@ -1,5 +1,5 @@
-import express from "express";
-import morgan from "morgan";
+const express = require("express");
+const morgan = require("morgan");
 
 import { engine } from "express-handlebars";
 
@@ -35,7 +35,7 @@ app.set("views", path.join(__dirname, "resources/views"));
 // ROUTER
 route(app);
 
-app.listen(process.env.APP_PORT || 3001, process.env.APP_HOST, () => {
+app.listen(process.env.APP_PORT || 3001, () => {
   // eslint-disable-next-line no-console
   console.log(
     `Hello Thuyet Lam Dev, I am running at ${process.env.APP_HOST}:${process.env.APP_PORT}/`
