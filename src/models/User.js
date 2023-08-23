@@ -6,7 +6,6 @@ const User = new Schema(
     email: { type: String, maxLength: 100, unique: true },
     password: { type: String },
     type: { type: Number, default: 1 },
-    refreshToken: { type: String, default: "" },
     status: { type: Number, default: 1 },
   },
   {

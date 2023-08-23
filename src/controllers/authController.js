@@ -10,6 +10,7 @@ import {
 const jwt = require("jsonwebtoken");
 
 class AuthController {
+  //[POST] /auth/login
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -21,7 +22,7 @@ class AuthController {
       if (!user) {
         return res.status(401).json({
           error: 1,
-          message: "Username is incorrect",
+          message: "Email is incorrect",
         });
       }
 
@@ -53,6 +54,8 @@ class AuthController {
     }
   }
 
+  // [POST] /auth/resetToken
+
   async refreshToken(req, res, next) {
     try {
       const token = req.headers?.authorization?.split(" ")?.[1];
@@ -72,6 +75,8 @@ class AuthController {
       });
     }
   }
+
+  //[GET] /auth/profile
 
   async getProfile(req, res) {
     const token = req.headers?.authorization?.split(" ")?.[1];
