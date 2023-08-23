@@ -5,10 +5,14 @@ import bcrypt from "bcrypt";
 class UserController {
   //[GET] /users
   async index(req, res, next) {
-    const { limit, page, keyword } = req.query;
+    const { limit, page, keyword, status } = req.query;
     try {
-      const perPage = limit || 20;
-      const pageNumber = Math.max(0, page - 1);
+      // Convert params to need type
+      const perPage = Number(limit) || 10;
+      const pageNumber = Math.max(0, page);
+      const queryStatus = Number(status) || -1;
+
+      // QUERY OBJECTS
       const query = {
         $or: [
           {
@@ -19,9 +23,14 @@ class UserController {
           },
         ],
       };
+
+      if (queryStatus !== -1) {
+        query.status = queryStatus;
+      }
+
       const users = await Users.find(query)
         .limit(perPage)
-        .skip(perPage * pageNumber)
+        .skip(perPage * (Number(pageNumber) - 1))
         .sort([["updatedAt", -1]]);
 
       const totalUser = await Users.countDocuments(query);
@@ -30,8 +39,8 @@ class UserController {
         data: users,
         meta: {
           pagination: {
-            total: +totalUser,
-            limit: +perPage,
+            total: totalUser,
+            limit: perPage,
             totalPages: Math.ceil(totalUser / perPage),
             currentPage: +page,
           },
@@ -61,7 +70,7 @@ class UserController {
         return;
       }
 
-      const hasPassword = bcrypt.hashSync(password, 15);
+      const hasPassword = bcrypt.hashSync(password, 12);
 
       const payload = {
         fullname,
