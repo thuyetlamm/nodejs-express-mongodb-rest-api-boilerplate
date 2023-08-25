@@ -9,7 +9,7 @@ class UserController {
     try {
       // Convert params to need type
       const perPage = Number(limit) || 10;
-      const pageNumber = Math.max(0, page);
+      const pageNumber = Math.max(1, page);
       const queryStatus = Number(status) || -1;
 
       // QUERY OBJECTS
