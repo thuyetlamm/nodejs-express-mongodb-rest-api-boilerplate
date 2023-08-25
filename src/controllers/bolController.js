@@ -110,7 +110,7 @@ class BolController {
     }
   }
 
-  //[DEL] /bol/delete/:id
+  //[DEL] /bol/delete/ :id
   async destroy(req, res, next) {
     try {
       const { id } = req.params;
