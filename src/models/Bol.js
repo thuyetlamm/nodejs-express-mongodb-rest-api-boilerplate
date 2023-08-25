@@ -25,6 +25,8 @@ const Bol = new Schema(
   }
 );
 
-Bol.plugin(timeZone);
+Bol.plugin(timeZone, {
+  paths: ["startDate", "endDate", "updatedAt", "createdAt"],
+});
 
 export const Bols = model("Bol", Bol);

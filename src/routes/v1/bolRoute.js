@@ -13,7 +13,26 @@ router.post(
   bolController.store
 );
 
-// router.put("/bol/update/:id", authMiddleware, bolController.update);
+router.get(
+  "/bol/:id",
+  authMiddleware,
+  validate(validateBol.deleteSchema),
+  bolController.detail
+);
+
+router.put(
+  "/bol/update/:id",
+  authMiddleware,
+  validate(validateBol.deleteSchema),
+  bolController.update
+);
+
+router.delete(
+  "/bol/delete/:id",
+  authMiddleware,
+  validate(validateBol.deleteSchema),
+  bolController.destroy
+);
 
 router.get("/bols", authMiddleware, bolController.index);
 

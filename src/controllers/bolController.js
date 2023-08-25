@@ -64,13 +64,73 @@ class BolController {
     }
   }
 
+  //[GET] /bol/:id
+  async detail(req, res, next) {
+    try {
+      const { id } = req.params;
+      const bol = await Bols.findOne({ _id: id });
+      return res.status(200).json({
+        data: bol,
+        status: 200,
+        message: "Get Detail Bol successfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: new Error(error).message,
+      });
+    }
+  }
+
+  //[PUT] /bol/update/:id
+  async update(req, res, next) {
+    try {
+      const { id } = req.params;
+      const bolDetail = await Bols.findOne({ _id: id });
+      const payload = req.body;
+      const startDate = moment(payload.startDate).format(FORMAT_DATE.YMDHm);
+      const endDate = payload?.endDate
+        ? moment(payload.endDate).format(FORMAT_DATE.YMDHm)
+        : null;
+      const payloadUpdate = {
+        ...payload,
+        startDate,
+        endDate,
+      };
+      bolDetail.updateOne(id, payloadUpdate);
+      await bolDetail.validate();
+      await bolDetail.save();
+      res.json({
+        status: 200,
+        message: "Bol updated successfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: new Error(error).message,
+      });
+    }
+  }
+
+  //[DEL] /bol/delete/:id
+  async destroy(req, res, next) {
+    try {
+      const { id } = req.params;
+      await Bols.deleteOne({ _id: id });
+      return res.status(200).json({
+        error: 0,
+        message: "Bol deleted successfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: new Error(error).message,
+      });
+    }
+  }
+
   //[POST] /users/create
   async store(req, res, next) {
     try {
       const payload = req.body;
-      const startDate = moment
-        .tz(payload.startDate, UTC_TIMEZONES)
-        .format("YYYY-MM-DD HH:mm:ss");
+      const startDate = moment(payload.startDate).format("YYYY-MM-DD HH:mm:ss");
       const convertPayload = {
         ...payload,
         startDate,
