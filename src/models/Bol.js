@@ -1,8 +1,9 @@
 import { Schema, model } from "mongoose";
+const timeZone = require("mongoose-timezone");
 
 const Bol = new Schema(
   {
-    code: { type: String, maxLength: 50, required: true },
+    code: { type: String, maxLength: 50, required: true, unique: true },
     from: { type: String, maxLength: 50, required: true },
     city: { type: String, maxLength: 100 },
     address: { type: String, maxLength: 100 },
@@ -23,5 +24,7 @@ const Bol = new Schema(
     timestamps: true,
   }
 );
+
+Bol.plugin(timeZone);
 
 export const Bols = model("Bol", Bol);

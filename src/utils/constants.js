@@ -1,5 +1,6 @@
-/**
- * Updated by trungquandev.com's author on August 17 2023
- * YouTube: https://youtube.com/@trungquandev
- * "A bit of fragrance clings to the hand that gives flowers!"
- */
+export const UTC_TIMEZONES = "Asia/Bangkok";
+
+export const FORMAT_DATE = {
+  YMD: "YYYY-MM-DD",
+  YMDHm: "YYYY-MM-DD HH:mm",
+};
