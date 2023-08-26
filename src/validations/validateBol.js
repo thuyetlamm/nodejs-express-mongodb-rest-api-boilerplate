@@ -4,14 +4,11 @@ import * as yup from "yup";
 const createSchema = yup.object({
   body: yup.object({
     code: yup.string().trim().min(6).max(15).required("The name is required"),
-    categoryId: yup.number().required("The name is required"),
+    categoryCode: yup.number().required("The name is required"),
     from: yup.string().trim().required("The From is required"),
     status: yup.number().required("The Status is required"),
     customerId: yup.number().required("The customerId is required"),
     startDate: yup.date("Type Date").required("The startDate is required"),
-    ward: yup.string().trim().required("The ward is required"),
-    district: yup.string().trim().required("The district is required"),
-    city: yup.string().trim().required("The city is required"),
     address: yup.string().trim().required("The address is required"),
   }),
 });
@@ -19,7 +16,7 @@ const createSchema = yup.object({
 const updateSchema = yup.object({
   body: yup.object({
     code: yup.string().trim().min(6).max(15).required("The name is required"),
-    categoryId: yup.number().required("The name is required"),
+    categoryCode: yup.number().required("The name is required"),
     from: yup.string().trim().required("The From is required"),
     status: yup.number().required("The Status is required"),
     customerId: yup.number().required("The customerId is required"),

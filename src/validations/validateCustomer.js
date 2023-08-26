@@ -3,7 +3,8 @@ import * as yup from "yup";
 
 const createSchema = yup.object({
   body: yup.object({
-    name: yup.string().trim().min(10).required("The name is required"),
+    name: yup.string().trim().min(6).required("The name is required"),
+    code: yup.string().trim().min(2).required("The name is required"),
     address: yup
       .string()
       .trim()

@@ -21,7 +21,12 @@ class CustomerController {
     try {
       const payload = req.body;
 
-      const customer = await Customers.create(payload);
+      const newPayload = {
+        ...payload,
+        code: payload.code.toUpperCase(),
+      };
+
+      const customer = await Customers.create(newPayload);
       res.json({
         status: 200,
         data: customer,

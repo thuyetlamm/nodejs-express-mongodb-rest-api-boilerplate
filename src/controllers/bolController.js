@@ -1,19 +1,27 @@
+const XLSX = require("xlsx");
 const { Bols } = require("~/models/Bol");
 const moment = require("moment");
 const { UTC_TIMEZONES, timestamp, FORMAT_DATE } = require("~/utils/constants");
 
+const NUMBER_COL = 6;
+
 class BolController {
   //[GET] /users
   async index(req, res, next) {
-    const { limit, page, keyword, status, categoryId, from, to } = req.query;
+    const {
+      limit = 10,
+      page = 1,
+      keyword,
+      status = -1,
+      customerCode,
+      from,
+      to,
+    } = req.query;
     try {
       // Convert params to need type
-      const perPage = Number(limit) || 10;
-      const pageNumber = Math.max(1, page);
-      const queryStatus = Number(status) || -1;
       const fromDate = from
         ? moment(from).format(FORMAT_DATE.YMD)
-        : moment().format(FORMAT_DATE.YMD);
+        : moment().subtract(6, "days").format(FORMAT_DATE.YMD);
       const toDate = to
         ? moment(to).add(1, "day").format(FORMAT_DATE.YMD)
         : moment().add(1, "day").format(FORMAT_DATE.YMD);
@@ -25,23 +33,23 @@ class BolController {
             code: { $regex: keyword || "", $options: "i" },
           },
         ],
-        createdAt: {
+        startDate: {
           $gte: fromDate,
           $lte: toDate,
         },
       };
 
-      if (queryStatus !== -1) {
-        query.status = queryStatus;
+      if (+status !== -1) {
+        query.status = +status;
       }
 
-      if (categoryId) {
-        query.categoryId = categoryId;
+      if (customerCode) {
+        query.customerCode = customerCode;
       }
 
       const bols = await Bols.find(query)
-        .limit(perPage)
-        .skip(perPage * (Number(pageNumber) - 1))
+        .limit(+limit)
+        .skip(+limit * (+page - 1))
         .sort([["updatedAt", -1]]);
 
       const totalBol = await Bols.countDocuments(query);
@@ -51,8 +59,8 @@ class BolController {
         meta: {
           pagination: {
             total: totalBol,
-            limit: perPage,
-            totalPages: Math.ceil(totalBol / perPage),
+            limit: +limit,
+            totalPages: Math.ceil(totalBol / +limit),
             currentPage: +page,
           },
         },
@@ -126,7 +134,7 @@ class BolController {
     }
   }
 
-  //[POST] /users/create
+  //[POST] /BOLS/create
   async store(req, res, next) {
     try {
       const payload = req.body;
@@ -147,6 +155,53 @@ class BolController {
         message: new Error(error).message,
       });
     }
+  }
+
+  //[POST] /bol/import
+  async upload(req, res, next) {
+    try {
+      const workBook = XLSX.read(req.file.buffer, { cellDates: true });
+      const wordSheet = workBook.Sheets[workBook.SheetNames[0]];
+      const countRow = XLSX.utils.sheet_to_json(wordSheet);
+      const arrayPayload = [];
+
+      for (let index = 2; index <= countRow.length + 1; index++) {
+        const startDate = wordSheet[`A${index}`]?.v || "";
+        const code = wordSheet[`B${index}`]?.v || "";
+        const customerCode = wordSheet[`C${index}`]?.v || "";
+        const receivedName = wordSheet[`D${index}`]?.v || "";
+        const receivedPhoneNumber = wordSheet[`F${index}`]?.v || "";
+        const category = wordSheet[`E${index}`]?.v || "";
+        const address = wordSheet[`G${index}`]?.v || "";
+
+        arrayPayload.push({
+          code,
+          category,
+          address,
+          from: "Hồ Chí Minh",
+          receivedName,
+          receivedPhoneNumber,
+          startDate: moment(startDate)
+            .tz(UTC_TIMEZONES)
+            .add(1, "day")
+            .format("YYYY-MM-DD HH:mm"),
+          customerCode,
+          status: 1,
+        });
+      }
+      const bols = await Bols.insertMany(arrayPayload);
+
+      res.status(200).json({
+        error: 0,
+        message: "Import bols successfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: new Error(error).message,
+      });
+    }
+
+    // Parse a buffer
   }
 }
 
