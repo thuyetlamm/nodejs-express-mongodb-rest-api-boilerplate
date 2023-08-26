@@ -1,5 +1,6 @@
 const express = require("express");
 const morgan = require("morgan");
+const cors = require("cors");
 
 import { engine } from "express-handlebars";
 
@@ -14,6 +15,15 @@ const app = express();
 // DB connection
 
 connect().catch(console.log);
+
+// CONFIG CORS
+
+app.use(
+  cors({
+    origin: "https://skypost-api.onrender.com",
+    optionsSuccessStatus: 200,
+  })
+);
 
 // PARSE JSON body
 app.use(express.json());
