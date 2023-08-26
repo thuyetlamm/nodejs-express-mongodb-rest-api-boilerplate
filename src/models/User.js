@@ -1,4 +1,5 @@
 import { Schema, model } from "mongoose";
+const timeZone = require("mongoose-timezone");
 
 const User = new Schema(
   {
@@ -13,5 +14,6 @@ const User = new Schema(
     timestamps: true,
   }
 );
+User.plugin(timeZone);
 
 export const Users = model("User", User);
