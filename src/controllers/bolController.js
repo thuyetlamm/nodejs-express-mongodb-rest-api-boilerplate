@@ -160,6 +160,12 @@ class BolController {
   //[POST] /bol/import
   async upload(req, res, next) {
     try {
+      if (!req.file)
+        return res.status(404).json({
+          error: true,
+          message: "File not found",
+        });
+
       const workBook = XLSX.read(req.file.buffer, { cellDates: true });
       const wordSheet = workBook.Sheets[workBook.SheetNames[0]];
       const countRow = XLSX.utils.sheet_to_json(wordSheet);
