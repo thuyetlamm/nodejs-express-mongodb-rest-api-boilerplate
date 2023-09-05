@@ -18,12 +18,7 @@ connect().catch(console.log);
 
 // CONFIG CORS
 
-app.use(
-  cors({
-    origin: "https://skypost-api.onrender.com",
-    optionsSuccessStatus: 200,
-  })
-);
+app.use(cors());
 
 // PARSE JSON body
 app.use(express.json());
