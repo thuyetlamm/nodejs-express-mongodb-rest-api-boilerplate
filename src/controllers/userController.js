@@ -29,6 +29,7 @@ class UserController {
       }
 
       const users = await Users.find(query)
+        .exclude("password")
         .limit(perPage)
         .skip(perPage * (Number(pageNumber) - 1))
         .sort([["updatedAt", -1]]);
