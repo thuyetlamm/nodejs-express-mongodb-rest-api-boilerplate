@@ -10,6 +10,7 @@ const User = new Schema(
     address: { type: String, maxLength: 255 },
     email: { type: String, maxLength: 100, unique: true },
     password: { type: String, maxLength: 150 },
+    phone: { type: String, maxLength: 15 },
     type: { type: Number, default: 1 },
     status: { type: Number, default: 1 },
   },

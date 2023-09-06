@@ -65,6 +65,7 @@ class UserController {
         username,
         avatar,
         address,
+        phone,
         role,
       } = req.body;
 
@@ -101,6 +102,7 @@ class UserController {
         avatar,
         role,
         address,
+        phone,
         password: hasPassword,
       };
 
@@ -127,6 +129,7 @@ class UserController {
       const payload = {
         fullname,
         username,
+        phone,
         email,
         type,
         avatar,
