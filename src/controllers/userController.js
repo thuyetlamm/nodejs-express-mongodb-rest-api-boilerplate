@@ -56,7 +56,17 @@ class UserController {
   //[POST] /user/create
   async store(req, res, next) {
     try {
-      const { fullname, password, email, type, status, username } = req.body;
+      const {
+        fullname,
+        password,
+        email,
+        type,
+        status,
+        username,
+        avatar,
+        address,
+        role,
+      } = req.body;
 
       // CHECK Email  Exists
       // QUERY OBJECTS
@@ -88,6 +98,9 @@ class UserController {
         email,
         type,
         status,
+        avatar,
+        role,
+        address,
         password: hasPassword,
       };
 
@@ -104,10 +117,11 @@ class UserController {
     }
   }
 
-  //[PUT] /user/create/:id
+  //[PUT] /user/update/:id
   async update(req, res, next) {
     try {
-      const { fullname, email, type, status, username } = req.body;
+      const { fullname, email, type, status, username, avatar, role, address } =
+        req.body;
       const { id } = req.params;
 
       const payload = {
@@ -115,6 +129,9 @@ class UserController {
         username,
         email,
         type,
+        avatar,
+        role,
+        address,
         status,
       };
 
