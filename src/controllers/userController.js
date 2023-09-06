@@ -124,8 +124,17 @@ class UserController {
   //[PUT] /user/update/:id
   async update(req, res, next) {
     try {
-      const { fullname, email, type, status, username, avatar, role, address } =
-        req.body;
+      const {
+        fullname,
+        email,
+        type,
+        status,
+        username,
+        avatar,
+        role,
+        address,
+        phone,
+      } = req.body;
       const { id } = req.params;
 
       const payload = {
