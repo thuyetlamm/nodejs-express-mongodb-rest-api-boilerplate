@@ -25,7 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // LOGGER HTTP
-app.use(morgan("combined"));
+// app.use(morgan("combined"));
 
 // CUSTOM PREFIX
 app.engine(

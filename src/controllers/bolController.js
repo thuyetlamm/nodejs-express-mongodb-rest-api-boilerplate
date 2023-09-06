@@ -2,6 +2,7 @@ const XLSX = require("xlsx");
 const { Bols } = require("~/models/Bol");
 const moment = require("moment");
 const { UTC_TIMEZONES, timestamp, FORMAT_DATE } = require("~/utils/constants");
+const { BOL_STATUS_ENUM } = require("~/types/bols");
 
 const NUMBER_COL = 6;
 
@@ -53,9 +54,30 @@ class BolController {
         .sort([["updatedAt", -1]]);
 
       const totalBol = await Bols.countDocuments(query);
+      const totalNew = await Bols.countDocuments({
+        ...query,
+        status: BOL_STATUS_ENUM.NEW,
+      });
+      const totalRefund = await Bols.countDocuments({
+        ...query,
+        status: BOL_STATUS_ENUM.REFURNING,
+      });
+      const totalFinish = await Bols.countDocuments({
+        ...query,
+        status: BOL_STATUS_ENUM.FINISHED,
+      });
+      const totalUnsuccess = await Bols.countDocuments({
+        ...query,
+        status: BOL_STATUS_ENUM.UNSCCESSFUL,
+      });
 
       res.status(200).json({
         data: bols,
+        totalBol,
+        totalUnsuccess,
+        totalRefund,
+        totalNew,
+        totalFinish,
         meta: {
           pagination: {
             total: totalBol,
