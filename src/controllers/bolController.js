@@ -150,7 +150,6 @@ class BolController {
   async update(req, res, next) {
     try {
       const { id } = req.params;
-      const bolDetail = await Bols.findOne({ _id: id });
       if (!bolDetail)
         return res.status(400).json({
           message: "Id not found",
@@ -174,8 +173,14 @@ class BolController {
         startDate,
         endDate,
       };
-      bolDetail.updateOne(id, convertPayload);
-      await bolDetail.save();
+      const bolDetail = await Bols.findOneAndUpdate(
+        { _id: id },
+        convertPayload,
+        { upsert: true }
+      );
+
+      // bolDetail.updateOne(id, convertPayload);
+      // await bolDetail.save();
       res.json({
         status: 200,
         message: "Bol updated successfully",
