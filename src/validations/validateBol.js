@@ -4,7 +4,6 @@ import * as yup from "yup";
 const createSchema = yup.object({
   body: yup.object({
     code: yup.string().trim().min(6).max(15).required("The name is required"),
-    categoryCode: yup.number().required("The name is required"),
     from: yup.string().trim().required("The From is required"),
     status: yup.number().required("The Status is required"),
     quantity: yup.number().required("The Quantity is required"),

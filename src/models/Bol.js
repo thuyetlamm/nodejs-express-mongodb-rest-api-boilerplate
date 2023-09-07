@@ -20,7 +20,7 @@ const Bol = new Schema(
     status: { type: Number, default: 1 },
     startDate: { type: Date, default: new Date() },
     endDate: { type: Date, default: null },
-    category: { type: String },
+    category: { type: Array, required: true },
     remark: { type: String, default: "" },
   },
   {
