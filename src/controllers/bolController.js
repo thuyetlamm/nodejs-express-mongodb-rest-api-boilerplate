@@ -35,7 +35,7 @@ class BolController {
             code: { $regex: keyword || "", $options: "i" },
           },
         ],
-        startDate: {
+        createdAt: {
           $gte: fromDate,
           $lte: toDate,
         },
@@ -174,9 +174,6 @@ class BolController {
         { $set: convertPayload },
         { upsert: true }
       );
-
-      // bolDetail.updateOne(id, convertPayload);
-      // await bolDetail.save();
       res.json({
         status: 200,
         message: "Bol updated successfully",
