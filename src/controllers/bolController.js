@@ -163,7 +163,9 @@ class BolController {
         ? moment(payload.endDate).format(FORMAT_DATE.YMDHm)
         : null;
 
-      const currentCustomer = Customers.findById(payload.customerId);
+      const currentCustomer = await Customers.findOne({
+        _id: payload.customerId,
+      });
 
       const convertPayload = {
         ...payload,
@@ -209,7 +211,10 @@ class BolController {
       const endDate = payload.endDate
         ? moment(payload.startDate).format("YYYY-MM-DD HH:mm")
         : null;
-      const currentCustomer = Customers.findById(payload.customerId);
+
+      const currentCustomer = await Customers.findOne({
+        _id: payload.customerId,
+      });
 
       const convertPayload = {
         ...payload,
