@@ -1,4 +1,5 @@
 export const BOL_STATUS_ENUM = {
+  ALL: -1,
   NEW: 0,
   FINISHED: 1,
   UNSCCESSFUL: 2,
