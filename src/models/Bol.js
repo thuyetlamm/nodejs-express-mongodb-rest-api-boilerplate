@@ -14,6 +14,7 @@ const Bol = new Schema(
     distrist: { type: String, maxLength: 100, default: "" },
     customerCode: { type: String, required: true },
     customerName: { type: String, default: "" },
+    customerId: { type: String, required: true },
     quantity: { type: Number, required: true, default: 1 },
     path: { type: String, default: "" },
     description: { type: String, default: "", maxLength: 255 },
