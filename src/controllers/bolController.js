@@ -53,7 +53,7 @@ class BolController {
         .skip(+limit * (+page - 1))
         .sort([["updatedAt", -1]]);
 
-      const { status, ...allQuery } = query;
+      const { status: spreadStatus, ...allQuery } = query;
 
       const totalBol = await Bols.countDocuments(allQuery);
       const totalNew = await Bols.countDocuments({
