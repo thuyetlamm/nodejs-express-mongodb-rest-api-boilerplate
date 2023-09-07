@@ -3,6 +3,7 @@ const { Bols } = require("~/models/Bol");
 const moment = require("moment");
 const { UTC_TIMEZONES, timestamp, FORMAT_DATE } = require("~/utils/constants");
 const { BOL_STATUS_ENUM } = require("~/types/bols");
+const { Customers } = require("~/models/Customer");
 
 const NUMBER_COL = 6;
 
@@ -161,12 +162,17 @@ class BolController {
       const endDate = payload?.endDate
         ? moment(payload.endDate).format(FORMAT_DATE.YMDHm)
         : null;
-      const payloadUpdate = {
+
+      const currentCustomer = Customers.findById(payload.customerId);
+
+      const convertPayload = {
         ...payload,
+        customerCode: currentCustomer.code,
+        customerName: currentCustomer.name,
         startDate,
         endDate,
       };
-      bolDetail.updateOne(id, payloadUpdate);
+      bolDetail.updateOne(id, convertPayload);
       await bolDetail.save();
       res.json({
         status: 200,
@@ -199,11 +205,20 @@ class BolController {
   async store(req, res, next) {
     try {
       const payload = req.body;
-      const startDate = moment(payload.startDate).format("YYYY-MM-DD HH:mm:ss");
+      const startDate = moment(payload.startDate).format("YYYY-MM-DD HH:mm");
+      const endDate = payload.endDate
+        ? moment(payload.startDate).format("YYYY-MM-DD HH:mm")
+        : null;
+      const currentCustomer = Customers.findById(payload.customerId);
+
       const convertPayload = {
         ...payload,
+        customerCode: currentCustomer.code,
+        customerName: currentCustomer.name,
         startDate,
+        endDate,
       };
+
       const bol = await Bols.create(convertPayload);
 
       res.json({
