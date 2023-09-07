@@ -208,7 +208,7 @@ class BolController {
           code,
           category,
           address,
-          from: "Hồ Chí Minh",
+          from: "2/10 Hồng Hà,p2,Tân Bình,HCM",
           receivedName,
           receivedPhoneNumber,
           startDate: moment(startDate)
