@@ -153,7 +153,9 @@ class BolController {
 
       // Update bol
       const payload = req.body;
-      const startDate = moment(payload.startDate).format(FORMAT_DATE.YMDHm);
+      const startDate = moment(payload.startDate)
+        .subtract(1, "day")
+        .format(FORMAT_DATE.YMDHm);
       const endDate = payload?.endDate
         ? moment(payload.endDate).format(FORMAT_DATE.YMDHm)
         : null;
