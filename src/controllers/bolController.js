@@ -7,7 +7,7 @@ const { BOL_STATUS_ENUM } = require("~/types/bols");
 const NUMBER_COL = 6;
 
 class BolController {
-  //[GET] /users
+  //[GET] /bols
   async index(req, res, next) {
     const {
       limit = 10,
@@ -101,6 +101,38 @@ class BolController {
     try {
       const { id } = req.params;
       const bol = await Bols.findOne({ _id: id });
+
+      if (!bol) {
+        return res.status(200).json({
+          data: null,
+          status: 200,
+          message: "Id not found",
+        });
+      }
+
+      return res.status(200).json({
+        data: bol,
+        status: 200,
+        message: "Get Detail Bol successfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: new Error(error).message,
+      });
+    }
+  }
+  //[GET] /bol/detail
+  async detailByCode(req, res, next) {
+    try {
+      const { code } = req.query;
+      const bol = await Bols.findOne({ code });
+      if (!bol) {
+        return res.status(200).json({
+          data: null,
+          status: 200,
+          message: "Id not found",
+        });
+      }
       return res.status(200).json({
         data: bol,
         status: 200,
@@ -118,6 +150,12 @@ class BolController {
     try {
       const { id } = req.params;
       const bolDetail = await Bols.findOne({ _id: id });
+      if (!bolDetail)
+        return res.status(400).json({
+          message: "Id not found",
+        });
+
+      // Update bol
       const payload = req.body;
       const startDate = moment(payload.startDate).format(FORMAT_DATE.YMDHm);
       const endDate = payload?.endDate
@@ -129,7 +167,6 @@ class BolController {
         endDate,
       };
       bolDetail.updateOne(id, payloadUpdate);
-      await bolDetail.validate();
       await bolDetail.save();
       res.json({
         status: 200,

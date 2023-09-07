@@ -25,6 +25,13 @@ router.post(
 );
 
 router.get(
+  "/bol/detail",
+  authMiddleware,
+  validate(validateBol.detailByCode),
+  bolController.detailByCode
+);
+
+router.get(
   "/bol/:id",
   authMiddleware,
   validate(validateBol.deleteSchema),
@@ -34,7 +41,7 @@ router.get(
 router.put(
   "/bol/update/:id",
   authMiddleware,
-  validate(validateBol.deleteSchema),
+  validate(validateBol.updateSchema),
   bolController.update
 );
 
