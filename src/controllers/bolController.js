@@ -262,9 +262,8 @@ class BolController {
         const receivedPhoneNumber = wordSheet[`E${index}`]?.v || "";
         const address = wordSheet[`F${index}`]?.v || "";
         const category = wordSheet[`G${index}`]?.v || "";
-        const quantity = wordSheet[`H${index}`]?.v || "";
+        const quantity = wordSheet[`H${index}`]?.v || 1;
         const convertCategoryList = category.split("+") || [];
-        console.log(convertCategoryList);
 
         const categoryAfterConvertToObject = convertCategoryList?.reduce(
           (acc, category) => {
