@@ -26,7 +26,6 @@ router.post(
 
 router.get(
   "/bol/detail",
-  authMiddleware,
   validate(validateBol.detailByCode),
   bolController.detailByCode
 );
