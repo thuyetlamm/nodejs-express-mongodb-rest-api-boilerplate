@@ -293,7 +293,7 @@ class BolController {
           receivedName,
           receivedPhoneNumber,
           startDate: moment(startDate)
-            .subtract(1, "days")
+            .subtract(1, "day")
             .tz(UTC_TIMEZONES)
             .format("YYYY-MM-DD HH:mm"),
           customerCode,
