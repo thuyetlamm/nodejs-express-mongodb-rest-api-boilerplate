@@ -299,7 +299,7 @@ class BolController {
           customerCode,
           customerId: `${currentCustomer?._id}`,
           customerName: currentCustomer?.name,
-          status: 1,
+          status: 0,
         });
       }
 
