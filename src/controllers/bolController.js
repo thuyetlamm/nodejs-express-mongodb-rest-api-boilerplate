@@ -294,7 +294,6 @@ class BolController {
           receivedPhoneNumber,
           startDate: moment(startDate)
             .tz(UTC_TIMEZONES)
-            .add(1, "day")
             .format("YYYY-MM-DD HH:mm"),
           customerCode,
           customerId: `${currentCustomer?._id}`,
