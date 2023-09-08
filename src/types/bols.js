@@ -24,3 +24,45 @@ export const BOL_STATUS = [
     title: "Hoàn lại",
   },
 ];
+export const CATEGORY_LIST = [
+  {
+    id: 1,
+    code: ["PHG"],
+    name: "Phát hẹn giờ",
+  },
+  {
+    id: 2,
+    code: ["DE"],
+    name: "Chuyển phát nhanh",
+  },
+  {
+    id: 3,
+    code: ["HT"],
+    name: "Hỏa tốc",
+  },
+  {
+    id: 4,
+    code: ["TF"],
+    name: "Vận tải chậm",
+  },
+  {
+    id: 5,
+    code: ["PTT"],
+    name: "Phát tận tay",
+  },
+  {
+    id: 6,
+    code: ["BP"],
+    name: "Báo phát",
+  },
+  {
+    id: 7,
+    code: ["DK"],
+    name: "Đồng kiểm",
+  },
+  {
+    id: 8,
+    code: ["DVTK", "DVTKKH"],
+    name: "Dịch vụ thư ký khách hàng",
+  },
+];

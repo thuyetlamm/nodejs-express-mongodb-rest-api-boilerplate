@@ -2,7 +2,7 @@ const XLSX = require("xlsx");
 const { Bols } = require("~/models/Bol");
 const moment = require("moment");
 const { UTC_TIMEZONES, timestamp, FORMAT_DATE } = require("~/utils/constants");
-const { BOL_STATUS_ENUM } = require("~/types/bols");
+const { BOL_STATUS_ENUM, CATEGORY_LIST } = require("~/types/bols");
 const { Customers } = require("~/models/Customer");
 
 const NUMBER_COL = 6;
@@ -247,25 +247,50 @@ class BolController {
           message: "File not found",
         });
 
+      const customerList = await Customers.find({});
+
       const workBook = XLSX.read(req.file.buffer, { cellDates: true });
       const wordSheet = workBook.Sheets[workBook.SheetNames[0]];
       const countRow = XLSX.utils.sheet_to_json(wordSheet);
       const arrayPayload = [];
 
       for (let index = 2; index <= countRow.length + 1; index++) {
-        const startDate = wordSheet[`A${index}`]?.v || "";
+        const startDate = wordSheet[`A${index}`]?.v || moment().format();
         const code = wordSheet[`B${index}`]?.v || "";
         const customerCode = wordSheet[`C${index}`]?.v || "";
         const receivedName = wordSheet[`D${index}`]?.v || "";
-        const receivedPhoneNumber = wordSheet[`F${index}`]?.v || "";
-        const category = wordSheet[`E${index}`]?.v || "";
-        const address = wordSheet[`G${index}`]?.v || "";
+        const receivedPhoneNumber = wordSheet[`E${index}`]?.v || "";
+        const address = wordSheet[`F${index}`]?.v || "";
+        const category = wordSheet[`G${index}`]?.v || "";
+        const quantity = wordSheet[`H${index}`]?.v || "";
+        const convertCategoryList = category.split("+") || [];
+        console.log(convertCategoryList);
+
+        const categoryAfterConvertToObject = convertCategoryList?.reduce(
+          (acc, category) => {
+            const findCategory = CATEGORY_LIST.find((item) =>
+              item.code.includes(category.toUpperCase())
+            );
+            if (findCategory) {
+              return [...acc, findCategory];
+            }
+            return acc;
+          },
+          []
+        );
+
+        const currentCustomer = customerList.find(
+          (c) => c.code === customerCode
+        );
 
         arrayPayload.push({
           code,
-          category,
+          category: categoryAfterConvertToObject,
           address,
+          quantity,
           from: "2/10 Hồng Hà,p2,Tân Bình,HCM",
+          path: "",
+          description: "",
           receivedName,
           receivedPhoneNumber,
           startDate: moment(startDate)
@@ -273,9 +298,12 @@ class BolController {
             .add(1, "day")
             .format("YYYY-MM-DD HH:mm"),
           customerCode,
+          customerId: `${currentCustomer?._id}`,
+          customerName: currentCustomer?.name,
           status: 1,
         });
       }
+
       const bols = await Bols.insertMany(arrayPayload);
 
       res.status(200).json({
