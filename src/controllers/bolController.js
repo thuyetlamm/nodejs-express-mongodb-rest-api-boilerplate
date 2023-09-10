@@ -283,7 +283,7 @@ class BolController {
         );
 
         arrayPayload.push({
-          code: code?.toUpperCase(),
+          code,
           category: categoryAfterConvertToObject,
           address,
           quantity,
