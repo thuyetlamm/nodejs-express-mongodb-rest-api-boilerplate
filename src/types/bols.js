@@ -62,7 +62,27 @@ export const CATEGORY_LIST = [
   },
   {
     id: 8,
-    code: ["DVTK", "DVTKKH"],
+    code: ["DVTK", "DVTKKH", "TKKH"],
     name: "Dịch vụ thư ký khách hàng",
+  },
+  {
+    id: 9,
+    code: ["PTN"],
+    name: "Phát trong ngày",
+  },
+  {
+    id: 10,
+    code: ["PUT"],
+    name: "Phát ưu tiên",
+  },
+  {
+    id: 11,
+    code: ["HDL"],
+    name: "Hàng đông lạnh",
+  },
+  {
+    id: 12,
+    code: ["HST"],
+    name: "Hồ sơ thầu",
   },
 ];
