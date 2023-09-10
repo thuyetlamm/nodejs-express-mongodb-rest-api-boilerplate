@@ -1,9 +1,16 @@
 import * as yup from "yup";
+import { REGEX_CODE_BOL } from "~/regex/bol";
 // Hidden for simplicity
 
 const createSchema = yup.object({
   body: yup.object({
-    code: yup.string().trim().min(6).max(15).required("The name is required"),
+    code: yup
+      .string()
+      .trim()
+      .min(6)
+      .max(15)
+      .matches(REGEX_CODE_BOL, "Code incorrect format")
+      .required("The name is required"),
     from: yup.string().trim().required("The From is required"),
     status: yup.number().required("The Status is required"),
     quantity: yup.number().required("The Quantity is required"),
@@ -15,7 +22,13 @@ const createSchema = yup.object({
 
 const updateSchema = yup.object({
   body: yup.object({
-    code: yup.string().trim().min(6).max(15).required("The name is required"),
+    code: yup
+      .string()
+      .trim()
+      .min(6)
+      .max(15)
+      .matches(REGEX_CODE_BOL, "Code incorrect format")
+      .required("The name is required"),
     from: yup.string().trim().required("The From is required"),
     status: yup.number().required("The Status is required"),
     quantity: yup.number().required("The Quantity is required"),
@@ -36,7 +49,11 @@ const deleteSchema = yup.object({
 
 const detailByCode = yup.object({
   query: yup.object({
-    code: yup.string().trim().min(10).required("The id is required"),
+    code: yup
+      .string()
+      .trim()
+      .matches(REGEX_CODE_BOL, "Code incorrect format")
+      .required("The id is required"),
   }),
 });
 
