@@ -14,6 +14,8 @@ const Bol = new Schema(
     customerId: { type: String, required: true },
     quantity: { type: Number, required: true, default: 1 },
     path: { type: String, default: "" },
+    type: { type: String, default: "" },
+    weight: { type: Number, default: 0 },
     description: { type: String, default: "", maxLength: 255 },
     status: { type: Number, default: 1 },
     startDate: { type: Date, default: new Date() },

@@ -9,6 +9,7 @@ const createSchema = yup.object({
       .trim()
       .min(6)
       .max(15)
+      .transform((value) => value.toUpperCase())
       .matches(REGEX_CODE_BOL, "Code incorrect format")
       .required("The name is required"),
     from: yup.string().trim().required("The From is required"),
@@ -25,6 +26,7 @@ const updateSchema = yup.object({
     code: yup
       .string()
       .trim()
+      .transform((value) => value.toUpperCase())
       .min(6)
       .max(15)
       .matches(REGEX_CODE_BOL, "Code incorrect format")
@@ -43,7 +45,13 @@ const updateSchema = yup.object({
 
 const deleteSchema = yup.object({
   params: yup.object({
-    id: yup.string().trim().min(10).required("The id is required"),
+    id: yup
+      .string()
+      .trim()
+      .transform((value) => value.toUpperCase())
+      .matches(REGEX_CODE_BOL, "Code incorrect format")
+      .min(10)
+      .required("The id is required"),
   }),
 });
 
@@ -52,6 +60,8 @@ const detailByCode = yup.object({
     code: yup
       .string()
       .trim()
+      .transform((value) => value.toUpperCase())
+
       .matches(REGEX_CODE_BOL, "Code incorrect format")
       .required("The id is required"),
   }),
