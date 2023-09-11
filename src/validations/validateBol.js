@@ -45,13 +45,7 @@ const updateSchema = yup.object({
 
 const deleteSchema = yup.object({
   params: yup.object({
-    id: yup
-      .string()
-      .trim()
-      .transform((value) => value.toUpperCase())
-      .matches(REGEX_CODE_BOL, "Code incorrect format")
-      .min(10)
-      .required("The id is required"),
+    id: yup.string().trim().min(10).required("The id is required"),
   }),
 });
 
