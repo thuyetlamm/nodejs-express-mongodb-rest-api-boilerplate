@@ -46,7 +46,7 @@ router.put(
 
 router.patch(
   "/bol/endpoint/update",
-  // authMiddleware,
+  authMiddleware,
   validate(validateBol.updateEndpoint),
   bolController.updateEndpoint
 );

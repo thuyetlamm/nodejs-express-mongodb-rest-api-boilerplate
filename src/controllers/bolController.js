@@ -13,6 +13,7 @@ class BolController {
     try {
       const {
         bols,
+        page,
         limit,
         totalBol,
         totalFinish,
