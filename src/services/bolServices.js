@@ -8,7 +8,7 @@ const { Bols } = require("~/models/Bol");
 const { BOL_STATUS_ENUM, CATEGORY_LIST } = require("~/types/bols");
 
 class BolServices {
-  list = async (query) => {
+  async list(query) {
     const {
       limit = 10,
       page = 1,
@@ -80,9 +80,9 @@ class BolServices {
       totalUnsuccess,
       bols,
     };
-  };
+  }
 
-  store = async (payload) => {
+  async store(payload) {
     const startDate = moment(payload.startDate).format("YYYY-MM-DD HH:mm");
     const endDate = payload.endDate
       ? moment(payload.startDate).format("YYYY-MM-DD HH:mm")
@@ -102,9 +102,9 @@ class BolServices {
 
     const bol = await Bols.create(convertPayload);
     return bol;
-  };
+  }
 
-  update = async (id, payload) => {
+  async update(id, payload) {
     const startDate = moment(payload.startDate)
       .subtract(1, "day")
       .format(FORMAT_DATE.YMDHm);
@@ -129,9 +129,9 @@ class BolServices {
       { upsert: true }
     );
     return bolDetail;
-  };
+  }
 
-  upload = async (file) => {
+  async upload(file) {
     const customerList = await Customers.find({});
 
     const workBook = XLSX.read(file, { cellDates: true });
@@ -187,9 +187,9 @@ class BolServices {
 
     const bols = await Bols.insertMany(arrayPayload);
     return bols;
-  };
+  }
 
-  updateEndpoint = async (payload) => {
+  async updateEndpoint(payload) {
     const convertPayload = {
       userName: payload.userName,
       status: payload.status,
@@ -201,6 +201,6 @@ class BolServices {
       { upsert: true }
     );
     return bolDetail;
-  };
+  }
 }
 export const BolServices = new BolServices();
