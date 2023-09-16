@@ -13,6 +13,7 @@ class BolController {
     try {
       const {
         bols,
+        limit,
         totalBol,
         totalFinish,
         totalNew,
@@ -30,8 +31,8 @@ class BolController {
         meta: {
           pagination: {
             total: totalBol,
-            limit: +limit,
-            totalPages: Math.ceil(totalBol / +limit),
+            limit,
+            totalPages: Math.ceil(totalBol / limit),
             currentPage: +page,
           },
         },
@@ -39,6 +40,7 @@ class BolController {
         message: "Get All Bols successfully",
       });
     } catch (error) {
+      console.log("error", error);
       res.status(500).json({ message: error.message });
     }
   }

@@ -53,6 +53,8 @@ class BolsServices {
       .skip(+limit * (+page - 1))
       .sort([["updatedAt", -1]]);
 
+    console.log(bols);
+
     const { status: spreadStatus, ...allQuery } = query;
 
     const totalBol = await Bols.countDocuments(allQuery);
@@ -74,6 +76,7 @@ class BolsServices {
     });
     return {
       totalBol,
+      limit: +limit,
       totalRefund,
       totalNew,
       totalFinish,
