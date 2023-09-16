@@ -7,8 +7,8 @@ import { FORMAT_DATE, UTC_TIMEZONES } from "~/utils/constants";
 const { Bols } = require("~/models/Bol");
 const { BOL_STATUS_ENUM, CATEGORY_LIST } = require("~/types/bols");
 
-class BolServices {
-  async list(query) {
+class BolsServices {
+  async list(queryParams) {
     const {
       limit = 10,
       page = 1,
@@ -17,7 +17,7 @@ class BolServices {
       customerCode,
       from,
       to,
-    } = query;
+    } = queryParams;
 
     // Convert params to need type
     const fromDate = from
@@ -203,4 +203,4 @@ class BolServices {
     return bolDetail;
   }
 }
-export const BolServices = new BolServices();
+export const BolServices = new BolsServices();
