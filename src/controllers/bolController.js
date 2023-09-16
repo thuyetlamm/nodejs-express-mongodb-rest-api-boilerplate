@@ -175,13 +175,13 @@ class BolController {
       if (!result) {
         return res.json({
           status: 400,
-          message: "Code not found",
+          message: "Không tìm thấy mã vận đơn",
         });
       }
 
       return res.json({
         status: 200,
-        message: "Bol updated successfully",
+        message: "Cập nhật vận đơn thành công",
       });
     } catch (error) {
       res.status(400).json({

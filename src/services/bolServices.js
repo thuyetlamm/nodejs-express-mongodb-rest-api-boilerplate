@@ -191,9 +191,10 @@ class BolsServices {
 
   async updateEndpoint(payload) {
     const convertPayload = {
-      userName: payload.userName,
+      userName: payload.userName || "",
       status: payload.status,
       reason: payload.reason ?? [],
+      endDate: moment().format(FORMAT_DATE.YMDHm),
     };
     const findBol = await Bols.findOne({ code: payload.code });
     if (!findBol) {
