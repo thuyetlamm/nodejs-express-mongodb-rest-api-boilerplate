@@ -171,6 +171,11 @@ class BolController {
   async updateEndpoint(req, res, next) {
     try {
       await BolServices.updateEndpoint(req.body);
+
+      res.json({
+        status: 200,
+        message: "Bol updated successfully",
+      });
     } catch (error) {
       res.status(400).json({
         message: new Error(error).message,
