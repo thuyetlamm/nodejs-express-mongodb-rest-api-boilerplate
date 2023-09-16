@@ -188,5 +188,19 @@ class BolServices {
     const bols = await Bols.insertMany(arrayPayload);
     return bols;
   };
+
+  updateEndpoint = async (payload) => {
+    const convertPayload = {
+      userName: payload.userName,
+      status: payload.status,
+      reason: payload.reason,
+    };
+    const bolDetail = await Bols.findOneAndUpdate(
+      { code: payload.code },
+      { $set: convertPayload },
+      { upsert: true }
+    );
+    return bolDetail;
+  };
 }
 export const BolServices = new BolServices();

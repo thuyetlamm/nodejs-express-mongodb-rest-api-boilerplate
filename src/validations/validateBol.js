@@ -43,6 +43,19 @@ const updateSchema = yup.object({
   }),
 });
 
+const updateEndpoint = yup.object({
+  body: yup.object({
+    code: yup
+      .string()
+      .trim()
+      .transform((value) => value.toUpperCase())
+      .min(6)
+      .max(15)
+      .matches(REGEX_CODE_BOL, "Code incorrect format")
+      .required("The name is required"),
+  }),
+});
+
 const deleteSchema = yup.object({
   params: yup.object({
     id: yup.string().trim().min(10).required("The id is required"),
@@ -55,9 +68,9 @@ const detailByCode = yup.object({
       .string()
       .trim()
       .transform((value) => value.toUpperCase())
-
       .matches(REGEX_CODE_BOL, "Code incorrect format")
       .required("The id is required"),
+    status: yup.number().typeError("The field status is required"),
   }),
 });
 
@@ -66,4 +79,5 @@ export const validateBol = {
   deleteSchema,
   updateSchema,
   detailByCode,
+  updateEndpoint,
 };

@@ -167,6 +167,16 @@ class BolController {
 
     // Parse a buffer
   }
+  // [PATH] /bol/endpoint/update
+  async updateEndpoint(req, res, next) {
+    try {
+      await BolServices.updateEndpoint(req.body);
+    } catch (error) {
+      res.status(400).json({
+        message: new Error(error).message,
+      });
+    }
+  }
 }
 
 module.exports = new BolController();
