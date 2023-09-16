@@ -170,9 +170,16 @@ class BolController {
   // [PATH] /bol/endpoint/update
   async updateEndpoint(req, res, next) {
     try {
-      await BolServices.updateEndpoint(req.body);
+      const result = await BolServices.updateEndpoint(req.body);
 
-      res.json({
+      if (!result) {
+        return res.json({
+          status: 400,
+          message: "Code not found",
+        });
+      }
+
+      return res.json({
         status: 200,
         message: "Bol updated successfully",
       });

@@ -195,10 +195,13 @@ class BolsServices {
       status: payload.status,
       reason: payload.reason,
     };
+    const findBol = await Bols.findOne({ code: payload.code });
+    if (!findBol) {
+      return null;
+    }
     const bolDetail = await Bols.findOneAndUpdate(
-      { code: payload.code },
-      { $set: convertPayload },
-      { upsert: true }
+      { _id: findBol._id },
+      { $set: convertPayload }
     );
     return bolDetail;
   }
