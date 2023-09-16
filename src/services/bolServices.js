@@ -193,7 +193,7 @@ class BolsServices {
     const convertPayload = {
       userName: payload.userName,
       status: payload.status,
-      reason: payload.reason,
+      reason: payload.reason ?? [],
     };
     const findBol = await Bols.findOne({ code: payload.code });
     if (!findBol) {
