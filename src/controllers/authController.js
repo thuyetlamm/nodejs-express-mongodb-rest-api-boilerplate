@@ -103,11 +103,12 @@ class AuthController {
       const verify = jwt.verify(token, process.env.JWT_SECRET_KEY);
       const user = await Users.findOne({ _id: verify?._id });
 
-      const { type, fullname, email, status, _id, username } = user;
+      const { type, fullname, email, status, _id, username, role } = user;
       res.status(200).json({
         status: 200,
         data: {
           _id,
+          role,
           username,
           type,
           fullname,
