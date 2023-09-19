@@ -156,7 +156,7 @@ class BolController {
           message: "File not found",
         });
 
-      await BolServices.update(req.file.buffer);
+      await BolServices.upload(req.file.buffer);
 
       res.status(200).json({
         error: 0,
