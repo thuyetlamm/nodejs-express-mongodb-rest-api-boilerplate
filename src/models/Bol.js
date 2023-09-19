@@ -5,7 +5,7 @@ const Bol = new Schema(
   {
     code: { type: String, maxLength: 20, required: true, unique: true },
     from: { type: String, maxLength: 50, required: true },
-    address: { type: String, maxLength: 100, require: true },
+    address: { type: String, maxLength: 255, require: true },
     userName: { type: String, maxLength: 255, default: "" },
     receivedName: { type: String, maxLength: 50, default: "" },
     receivedPhoneNumber: { type: String, maxLength: 12, default: "" },
