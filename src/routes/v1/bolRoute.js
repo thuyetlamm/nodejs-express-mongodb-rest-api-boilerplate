@@ -33,7 +33,7 @@ router.get(
 router.get(
   "/bol/:id",
   authMiddleware,
-  validate(validateBol.deleteSchema),
+  validate(validateBol.detailSchema),
   bolController.detail
 );
 
@@ -51,8 +51,8 @@ router.patch(
   bolController.updateEndpoint
 );
 
-router.delete(
-  "/bol/delete/:id",
+router.post(
+  "/bol/delete",
   authMiddleware,
   validate(validateBol.deleteSchema),
   bolController.destroy

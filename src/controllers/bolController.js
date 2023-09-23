@@ -117,7 +117,7 @@ class BolController {
   //[DEL] /bol/delete/ :id
   async destroy(req, res, next) {
     try {
-      const { id } = req.params;
+      const { id } = req.body;
 
       await BolServices.detroy(id);
 

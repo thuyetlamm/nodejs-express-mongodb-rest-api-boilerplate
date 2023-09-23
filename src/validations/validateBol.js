@@ -57,6 +57,12 @@ const updateEndpoint = yup.object({
 });
 
 const deleteSchema = yup.object({
+  body: yup.object({
+    id: yup.mixed().required("The id is required"),
+  }),
+});
+
+const detailSchema = yup.object({
   params: yup.object({
     id: yup.mixed().required("The id is required"),
   }),
@@ -80,4 +86,5 @@ export const validateBol = {
   updateSchema,
   detailByCode,
   updateEndpoint,
+  detailSchema,
 };
