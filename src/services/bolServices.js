@@ -22,7 +22,7 @@ class BolsServices {
     // Convert params to need type
     const fromDate = from
       ? moment(from).format(FORMAT_DATE.YMD)
-      : moment().subtract(6, "days").format(FORMAT_DATE.YMD);
+      : moment().subtract(1, "days").format(FORMAT_DATE.YMD);
     const toDate = to
       ? moment(to).add(1, "day").format(FORMAT_DATE.YMD)
       : moment().add(1, "day").format(FORMAT_DATE.YMD);
