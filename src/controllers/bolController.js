@@ -118,7 +118,9 @@ class BolController {
   async destroy(req, res, next) {
     try {
       const { id } = req.params;
-      await Bols.deleteOne({ _id: id });
+
+      await BolServices.detroy(id);
+
       return res.status(200).json({
         error: 0,
         message: "Bol deleted successfully",

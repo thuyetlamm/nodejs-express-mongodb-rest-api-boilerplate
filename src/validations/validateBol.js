@@ -58,7 +58,7 @@ const updateEndpoint = yup.object({
 
 const deleteSchema = yup.object({
   params: yup.object({
-    id: yup.string().trim().min(10).required("The id is required"),
+    id: yup.mixed().required("The id is required"),
   }),
 });
 

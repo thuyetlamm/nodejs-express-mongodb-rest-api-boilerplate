@@ -208,5 +208,13 @@ class BolsServices {
     );
     return bolDetail;
   }
+  async detroy(id) {
+    if (typeof id === "string") {
+      const res = await Bols.deleteOne({ _id: id });
+      return res;
+    }
+    const delRes = await Bols.deleteMany({ _id: { $in: id } });
+    return delRes;
+  }
 }
 export const BolServices = new BolsServices();
