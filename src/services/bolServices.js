@@ -178,8 +178,9 @@ class BolsServices {
         receivedName,
         receivedPhoneNumber,
         startDate: moment(startDate)
+          .add(1, "day")
           .tz(UTC_TIMEZONES)
-          .format("YYYY-MM-DD HH:mm"),
+          .format("YYYY-MM-DD 19:mm"),
         customerCode,
         customerId: `${currentCustomer?._id}`,
         customerName: currentCustomer?.name,
