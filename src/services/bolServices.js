@@ -141,15 +141,15 @@ class BolsServices {
     const countRow = XLSX.utils.sheet_to_json(wordSheet);
     const arrayPayload = [];
 
+    let numberToLoop = 0;
+
     for (let index = 2; index <= countRow.length + 1; index++) {
-      const startDate = wordSheet[`A${index}`]?.v || moment().format();
       const code = wordSheet[`B${index}`]?.v || "";
-      const customerCode = wordSheet[`C${index}`]?.v || "";
-      const receivedName = wordSheet[`D${index}`]?.v || "";
-      const receivedPhoneNumber = wordSheet[`E${index}`]?.v || "";
-      const address = wordSheet[`F${index}`]?.v || "";
-      const category = wordSheet[`G${index}`]?.v || "";
-      const quantity = wordSheet[`H${index}`]?.v || 1;
+      const startDate = wordSheet[`A${index}`]?.v || moment().format();
+      const receivedName = wordSheet[`C${index}`]?.v || "";
+      const address = wordSheet[`D${index}`]?.v || "";
+      const category = wordSheet[`E${index}`]?.v || "";
+      const quantity = wordSheet[`F${index}`]?.v || 1;
       const convertCategoryList = category.split("+") || [];
 
       const categoryAfterConvertToObject = convertCategoryList?.reduce(
@@ -165,8 +165,6 @@ class BolsServices {
         []
       );
 
-      const currentCustomer = customerList.find((c) => c.code === customerCode);
-
       arrayPayload.push({
         code,
         category: categoryAfterConvertToObject,
@@ -176,19 +174,16 @@ class BolsServices {
         path: "",
         description: "",
         receivedName,
-        receivedPhoneNumber,
         startDate: moment(startDate)
           .add(1, "day")
           .tz(UTC_TIMEZONES)
           .format("YYYY-MM-DD 19:mm"),
-        customerCode,
-        customerId: `${currentCustomer?._id}`,
-        customerName: currentCustomer?.name,
         status: 0,
       });
     }
 
-    const bols = await Bols.insertMany(arrayPayload);
+    const newPayload = arrayPayload.filter((payload) => !!payload.code);
+    const bols = await Bols.insertMany(newPayload);
     return bols;
   }
 
