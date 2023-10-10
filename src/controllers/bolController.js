@@ -4,6 +4,8 @@ const { UTC_TIMEZONES, timestamp, FORMAT_DATE } = require("~/utils/constants");
 const { BOL_STATUS_ENUM, CATEGORY_LIST } = require("~/types/bols");
 const { Customers } = require("~/models/Customer");
 const { BolServices } = require("~/services/bolServices");
+const XLSX = require("xlsx");
+const Excel = require("exceljs");
 
 const NUMBER_COL = 6;
 
@@ -159,7 +161,6 @@ class BolController {
         });
 
       await BolServices.upload(req.file.buffer);
-
       res.status(200).json({
         error: 0,
         message: "Import bols successfully",
@@ -172,6 +173,87 @@ class BolController {
 
     // Parse a buffer
   }
+
+  // //[POST] /bol/import
+  // async uploadTest(req, res, next) {
+  //   try {
+  //     if (!req.file)
+  //       return res.status(404).json({
+  //         error: true,
+  //         message: "File not found",
+  //       });
+
+  //     const workBook = XLSX.read(req.file.buffer);
+  //     const wordSheet = workBook.Sheets[workBook.SheetNames[0]];
+  //     const countRow = XLSX.utils.sheet_to_json(wordSheet);
+
+  //     let categories = "";
+
+  //     const workbook = new Excel.Workbook();
+  //     const worksheets = workbook.addWorksheet("sheets");
+
+  //     worksheets.columns = [
+  //       { header: "No.", key: "no", width: 10 },
+  //       { header: "Item Code", key: "code", width: 10 },
+  //       { header: "Brand", key: "brand", width: 10 },
+  //       { header: "Cate", key: "cate", width: 32 },
+  //       { header: "Description", key: "desc", width: 10 },
+  //       { header: "Bom", key: "bom", width: 10 },
+  //       { header: "Bom Qty", key: "bomqty", width: 10 },
+  //       { header: "Cost", key: "cost", width: 10 },
+  //       { header: "Price", key: "price", width: 10 },
+  //       { header: "Unit", key: "unit", width: 10 },
+  //       { header: "Tax", key: "vat", width: 10 },
+  //     ];
+
+  //     for (let index = 5; index < countRow.length + 1; index++) {
+  //       const no = wordSheet[`B${index}`]?.v || "";
+  //       const code = wordSheet[`C${index}`]?.v || "";
+  //       const quantity = wordSheet[`M${index}`]?.v || 0;
+  //       const price = wordSheet[`N${index}`]?.v || 0;
+  //       const brand = wordSheet[`Q${index}`]?.v || 0;
+  //       if (!no) {
+  //         categories = code;
+  //         // TODO:
+  //       } else {
+  //         const payload = {
+  //           no: 1,
+  //           cate: categories,
+  //           code,
+  //           desc: code,
+  //           bom: "",
+  //           bomqty: "",
+  //           cost: price,
+  //           brand,
+  //           unit: "PCS",
+  //           vat: "VAT",
+  //           quantity,
+  //           price,
+  //         };
+  //         worksheets.addRow(payload);
+  //       }
+  //     }
+
+  //     await workbook.xlsx
+  //       .writeFile("Product.xlsx")
+  //       .then((response) => {
+  //         // res.sendFile(path.join("newSaveeee.xlsx"));
+  //       })
+  //       .catch((err) => {
+  //         console.log("err", err);
+  //       });
+
+  //     return res.status(200).json({
+  //       status: "OK",
+  //     });
+  //   } catch (error) {
+  //     res.status(400).json({
+  //       message: new Error(error).message,
+  //     });
+  //   }
+
+  //   // Parse a buffer
+  // }
   // [PATH] /bol/endpoint/update
   async updateEndpoint(req, res, next) {
     try {

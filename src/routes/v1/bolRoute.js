@@ -17,6 +17,13 @@ router.post(
   bolController.store
 );
 
+// router.post(
+//   "/bol/import/test",
+//   authMiddleware,
+//   upload.single("file"),
+//   bolController.uploadTest
+// );
+
 router.post(
   "/bol/import",
   authMiddleware,

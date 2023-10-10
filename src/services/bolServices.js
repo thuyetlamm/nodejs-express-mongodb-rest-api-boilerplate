@@ -134,57 +134,55 @@ class BolsServices {
   }
 
   async upload(file) {
-    const customerList = await Customers.find({});
-
     const workBook = XLSX.read(file, { cellDates: true });
     const wordSheet = workBook.Sheets[workBook.SheetNames[0]];
     const countRow = XLSX.utils.sheet_to_json(wordSheet);
-    const arrayPayload = [];
-
-    let numberToLoop = 0;
-
     for (let index = 2; index <= countRow.length + 1; index++) {
       const code = wordSheet[`B${index}`]?.v || "";
-      const startDate = wordSheet[`A${index}`]?.v || moment().format();
-      const receivedName = wordSheet[`C${index}`]?.v || "";
-      const address = wordSheet[`D${index}`]?.v || "";
-      const category = wordSheet[`E${index}`]?.v || "";
-      const quantity = wordSheet[`F${index}`]?.v || 1;
-      const convertCategoryList = category.split("+") || [];
 
-      const categoryAfterConvertToObject = convertCategoryList?.reduce(
-        (acc, category) => {
-          const findCategory = CATEGORY_LIST.find((item) =>
-            item.code.includes(category.toUpperCase())
-          );
-          if (findCategory) {
-            return [...acc, findCategory];
-          }
-          return acc;
-        },
-        []
-      );
+      if (!!code) {
+        const startDate = wordSheet[`A${index}`]?.v || moment().format();
+        const receivedName = wordSheet[`C${index}`]?.v || "";
+        const address = wordSheet[`D${index}`]?.v || "";
+        const category = wordSheet[`E${index}`]?.v || "";
+        const quantity = wordSheet[`F${index}`]?.v || 1;
+        const convertCategoryList = category.split("+") || [];
 
-      arrayPayload.push({
-        code,
-        category: categoryAfterConvertToObject,
-        address,
-        quantity,
-        from: "2/10 Hồng Hà,p2,Tân Bình,HCM",
-        path: "",
-        description: "",
-        receivedName,
-        startDate: moment(startDate)
-          .add(1, "day")
-          .tz(UTC_TIMEZONES)
-          .format("YYYY-MM-DD 19:mm"),
-        status: 0,
-      });
+        const categoryAfterConvertToObject = convertCategoryList?.reduce(
+          (acc, category) => {
+            const findCategory = CATEGORY_LIST.find((item) =>
+              item.code.includes(category.toUpperCase())
+            );
+            if (findCategory) {
+              return [...acc, findCategory];
+            }
+            return acc;
+          },
+          []
+        );
+
+        const payload = {
+          code,
+          category: categoryAfterConvertToObject,
+          address,
+          quantity,
+          from: "2/10 Hồng Hà,p2,Tân Bình,HCM",
+          path: "",
+          description: "",
+          receivedName,
+          startDate: moment(startDate)
+            .add(1, "day")
+            .tz(UTC_TIMEZONES)
+            .format("YYYY-MM-DD 19:mm"),
+          status: 0,
+        };
+
+        const bol = await Bols.findOneAndUpdate({ code: code }, payload, {
+          new: true,
+          upsert: true,
+        });
+      }
     }
-
-    const newPayload = arrayPayload.filter((payload) => !!payload.code);
-    const bols = await Bols.insertMany(newPayload);
-    return bols;
   }
 
   async updateEndpoint(payload) {
