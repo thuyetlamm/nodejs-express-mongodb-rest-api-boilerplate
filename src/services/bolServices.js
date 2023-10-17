@@ -85,9 +85,12 @@ class BolsServices {
   }
 
   async store(payload) {
-    const startDate = moment(payload.startDate).format("YYYY-MM-DD HH:mm");
+    const minutes = Math.ceil(Math.random() * 60);
+    const startDate = moment(payload.startDate).format(
+      `YYYY-MM-DD 19:${minutes}`
+    );
     const endDate = payload.endDate
-      ? moment(payload.startDate).format("YYYY-MM-DD HH:mm")
+      ? moment(payload.startDate).format("YYYY-MM-DD 19:mm")
       : null;
 
     const currentCustomer = await Customers.findOne({
@@ -161,6 +164,8 @@ class BolsServices {
           []
         );
 
+        const minutes = Math.ceil(Math.random() * 60);
+
         const payload = {
           code,
           category: categoryAfterConvertToObject,
@@ -173,7 +178,7 @@ class BolsServices {
           startDate: moment(startDate)
             .add(1, "day")
             .tz(UTC_TIMEZONES)
-            .format("YYYY-MM-DD 19:mm"),
+            .format(`YYYY-MM-DD 19:${minutes}`),
           status: 0,
         };
 
@@ -197,7 +202,7 @@ class BolsServices {
       return null;
     }
     const bolDetail = await Bols.findOneAndUpdate(
-      { _id: findBol._id },
+      { code: payload.code },
       { $set: convertPayload }
     );
     return bolDetail;
