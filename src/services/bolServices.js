@@ -176,7 +176,6 @@ class BolsServices {
           description: "",
           receivedName,
           startDate: moment(startDate)
-            .add(1, "day")
             .tz(UTC_TIMEZONES)
             .format(`YYYY-MM-DD 19:${minutes}`),
           status: 0,
