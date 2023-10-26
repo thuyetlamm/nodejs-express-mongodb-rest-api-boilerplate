@@ -110,9 +110,6 @@ class BolsServices {
   }
 
   async update(id, payload) {
-    const startDate = moment(payload.startDate)
-      .subtract(1, "day")
-      .format(FORMAT_DATE.YMDHm);
     const endDate = payload?.endDate
       ? moment(payload.endDate).format(FORMAT_DATE.YMDHm)
       : null;
@@ -125,7 +122,6 @@ class BolsServices {
       ...payload,
       customerCode: currentCustomer.code,
       customerName: currentCustomer.name,
-      startDate,
       endDate,
     };
     const bolDetail = await Bols.findOneAndUpdate(
