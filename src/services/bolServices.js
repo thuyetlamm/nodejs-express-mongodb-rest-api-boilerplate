@@ -118,6 +118,8 @@ class BolsServices {
       _id: payload.customerId,
     });
 
+    delete payload.startDate;
+
     const convertPayload = {
       ...payload,
       customerCode: currentCustomer.code,
