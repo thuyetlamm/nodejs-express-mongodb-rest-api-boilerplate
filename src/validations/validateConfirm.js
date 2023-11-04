@@ -3,7 +3,7 @@ import * as yup from "yup";
 
 const createSchema = yup.object({
   body: yup.object({
-    name: yup.string().trim().min(6).required("The name is required"),
+    name: yup.string().trim().min(2).required("The name is required"),
     quantity: yup.number().min(1).required("The quantity is required"),
   }),
 });
