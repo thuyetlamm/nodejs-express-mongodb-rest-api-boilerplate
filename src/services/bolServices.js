@@ -85,7 +85,7 @@ class BolsServices {
   }
 
   async store(payload) {
-    const minutes = Math.ceil(Math.random() * 60);
+    const minutes = Math.ceil(Math.random() * 59);
     const startDate = moment(payload.startDate).format(
       `YYYY-MM-DD 19:${minutes}`
     );
