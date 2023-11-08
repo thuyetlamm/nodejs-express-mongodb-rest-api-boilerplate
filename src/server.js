@@ -9,6 +9,7 @@ import "dotenv/config";
 import path from "path";
 import route from "./routes/v1";
 import { connect } from "./config/mongodb";
+import { corsOptions } from "./config/cors";
 
 const app = express();
 
@@ -18,7 +19,7 @@ connect().catch(console.log);
 
 // CONFIG CORS
 
-app.use(cors());
+app.use(cors(corsOptions));
 
 // PARSE JSON body
 app.use(express.json());
