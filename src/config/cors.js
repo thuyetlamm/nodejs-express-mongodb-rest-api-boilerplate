@@ -1,6 +1,6 @@
 const WHITELIST_DOMAINS = [
-  "https://www.skypost.vn/",
-  "https://lammaiwedding.vercel.app/",
+  "https://www.skypost.vn",
+  "https://lammaiwedding.vercel.app",
 ];
 
 export const corsOptions = {
