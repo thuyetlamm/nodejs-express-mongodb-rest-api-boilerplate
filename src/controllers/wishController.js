@@ -49,15 +49,9 @@ class WishController {
       }
 
       const device = await Devices.find({
-        $and: [
-          {
-            wishId: payload._id,
-          },
-          {
-            uuid: payload.uuid,
-          },
-        ],
-      });
+        wishId: payload._id,
+        uuid: payload.uuid,
+      }).exec();
 
       if (device) {
         return null;
