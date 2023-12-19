@@ -1,4 +1,5 @@
 const { Wishes } = require("~/models/Wish");
+const { Devices } = require("~/models/Device");
 
 class WishController {
   // [GET] /customers
@@ -43,14 +44,33 @@ class WishController {
     try {
       const payload = req.body;
 
-      if (!payload?._id) {
+      if (!payload?._id || !payload.uuid) {
         throw new Error("Id is required");
+      }
+
+      const device = await Devices.find({
+        $and: [
+          {
+            wishId: payload._id,
+          },
+          {
+            uuid: payload.uuid,
+          },
+        ],
+      });
+
+      if (device) {
+        return null;
       }
 
       const wish = await Wishes.findOneAndUpdate(
         { _id: payload._id },
         { $inc: { like: 1 } }
       );
+      const newDevice = await Devices.create({
+        wishId: payload._id,
+        uuid: payload.uuid,
+      });
       res.json({
         status: 200,
         message: "Wish liked successfully",
