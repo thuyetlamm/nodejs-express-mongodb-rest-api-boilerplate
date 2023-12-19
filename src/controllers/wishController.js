@@ -6,8 +6,8 @@ class WishController {
   async index(req, res, next) {
     try {
       const wishes = await Wishes.find({}).sort({
-        createdAt: "desc",
-        like: "desc",
+        createdAt: "asc",
+        like: "asc",
       });
       res.status(200).json({
         data: wishes,
