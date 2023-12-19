@@ -48,13 +48,13 @@ class WishController {
         throw new Error("Id is required");
       }
 
-      const device = await Devices.find({
+      const device = await Devices.findOne({
         wishId: payload._id,
         uuid: payload.uuid,
       }).exec();
 
       if (device) {
-        return null;
+        throw new Error("Bạn chỉ có thể thả tim 1 lần với bình luận này");
       }
 
       const wish = await Wishes.findOneAndUpdate(
@@ -71,6 +71,7 @@ class WishController {
       });
     } catch (error) {
       res.status(404).json({
+        error: true,
         message: new Error(error).message,
       });
     }
