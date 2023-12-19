@@ -19,6 +19,8 @@ router.post(
   wishController.store
 );
 
+router.post("/wish/like", wishController.like);
+
 router.get("/wishs", wishController.index);
 
 module.exports = router;

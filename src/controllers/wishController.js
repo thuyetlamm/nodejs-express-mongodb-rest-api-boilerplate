@@ -5,7 +5,10 @@ class WishController {
 
   async index(req, res, next) {
     try {
-      const wishes = await Wishes.find({});
+      const wishes = await Wishes.find({}).sort({
+        createdAt: "desc",
+        like: "desc",
+      });
       res.status(200).json({
         data: wishes,
         status: 200,
@@ -21,11 +24,37 @@ class WishController {
     try {
       const payload = req.body;
 
-      const wish = await Wishes.create(payload);
+      const newPayload = { ...payload, like: 0 };
+
+      const wish = await Wishes.create(newPayload);
       res.json({
         status: 200,
         data: wish,
         message: "Wish created successfully",
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: new Error(error).message,
+      });
+    }
+  }
+
+  // [POST] /wish/like
+  async like(req, res, next) {
+    try {
+      const payload = req.body;
+
+      if (!payload?._id) {
+        throw new Error("Id is required");
+      }
+
+      const wish = await Wishes.findOneAndUpdate(
+        { _id: payload._id },
+        { $inc: { like: 1 } }
+      );
+      res.json({
+        status: 200,
+        message: "Wish liked successfully",
       });
     } catch (error) {
       res.status(404).json({
