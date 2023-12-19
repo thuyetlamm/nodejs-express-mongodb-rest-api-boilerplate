@@ -72,7 +72,7 @@ class WishController {
     } catch (error) {
       res.status(404).json({
         error: true,
-        message: new Error(error).message,
+        message: error.message,
       });
     }
   }

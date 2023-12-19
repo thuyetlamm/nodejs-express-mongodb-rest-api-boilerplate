@@ -5,6 +5,7 @@ const wishController = require("../../controllers/wishController");
 const { validate } = require("~/validations");
 const { validateWish } = require("~/validations/validateWish");
 const { default: authMiddleware } = require("~/middlewares/authMiddleware");
+const { default: rateLimit } = require("~/middlewares/rateLimit");
 
 router.delete(
   "/wish/delete/:id",
@@ -19,7 +20,7 @@ router.post(
   wishController.store
 );
 
-router.post("/wish/like", wishController.like);
+router.post("/wish/like", rateLimit, wishController.like);
 
 router.get("/wishs", wishController.index);
 
