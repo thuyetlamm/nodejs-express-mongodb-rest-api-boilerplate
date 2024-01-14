@@ -4,6 +4,7 @@ const timeZone = require("mongoose-timezone");
 const Wish = new Schema(
   {
     name: { type: String, require: true, maxLength: 100 },
+    type: { type: Number, require: true, default: 0 },
     wishes: { type: String, require: true, default: "" },
     like: { type: Number, default: 0 },
   },
