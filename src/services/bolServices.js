@@ -138,15 +138,19 @@ class BolsServices {
     const workBook = XLSX.read(file, { cellDates: true });
     const wordSheet = workBook.Sheets[workBook.SheetNames[0]];
     const countRow = XLSX.utils.sheet_to_json(wordSheet);
+    const customerList = await Customers.find({});
     for (let index = 2; index <= countRow.length + 1; index++) {
       const code = wordSheet[`B${index}`]?.v || "";
 
       if (!!code) {
-        const startDate = wordSheet[`A${index}`]?.v || moment().format();
-        const receivedName = wordSheet[`C${index}`]?.v || "";
-        const address = wordSheet[`D${index}`]?.v || "";
-        const category = wordSheet[`E${index}`]?.v || "";
-        const quantity = wordSheet[`F${index}`]?.v || 1;
+        const startDate = moment(
+          wordSheet[`A${index}`]?.v || new Date()
+        ).format();
+        const customerCode = wordSheet[`C${index}`]?.v || "";
+        const receivedName = wordSheet[`D${index}`]?.v || "";
+        const address = wordSheet[`E${index}`]?.v || "";
+        const category = wordSheet[`F${index}`]?.v || "";
+        const quantity = wordSheet[`G${index}`]?.v || 1;
         const convertCategoryList = category.split("+") || [];
 
         const categoryAfterConvertToObject = convertCategoryList?.reduce(
@@ -162,11 +166,16 @@ class BolsServices {
           []
         );
 
+        const customer = customerList.find(
+          (item) => item.code === customerCode
+        );
+
         const minutes = Math.ceil(Math.random() * 59);
 
         const payload = {
           code,
           category: categoryAfterConvertToObject,
+          customerCode,
           address,
           quantity,
           from: "2/10 Hồng Hà,p2,Tân Bình,HCM",
@@ -177,9 +186,16 @@ class BolsServices {
             .tz(UTC_TIMEZONES)
             .format(`YYYY-MM-DD 19:${minutes}`),
           status: 0,
+          ...(customer
+            ? {
+                customerId: customer._id,
+                customerName: customer.name,
+                customerCode: customer.code,
+              }
+            : {}),
         };
 
-        const bol = await Bols.findOneAndUpdate({ code: code }, payload, {
+        await Bols.findOneAndUpdate({ code: code }, payload, {
           new: true,
           upsert: true,
         });
