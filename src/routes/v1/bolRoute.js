@@ -47,7 +47,7 @@ router.get(
 router.get(
   "/bol/detail/ggsheet",
   authMiddleware,
-  validate(validateBol.detailSchema),
+  validate(validateBol.detailByCode),
   bolController.detailByGGSheet
 );
 

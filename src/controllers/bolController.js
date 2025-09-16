@@ -99,8 +99,8 @@ class BolController {
 
   async detailByGGSheet(req, res, next) {
     try {
-      const { id } = req.params;
-      const query = encodeURIComponent(`where B='${id}'`);
+      const { code } = req.query;
+      const query = encodeURIComponent(`where B='${code}'`);
 
       const bol = await fetch(
         `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/gviz/tq?tq=${query}`
