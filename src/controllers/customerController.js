@@ -39,6 +39,30 @@ class CustomerController {
     }
   }
 
+  // [POST] /customer/create
+  async update(req, res, next) {
+    try {
+      const payload = req.body;
+
+      const newPayload = {
+        ...payload,
+        code: payload.code.toUpperCase(),
+      };
+      const { id } = req.params;
+
+      const customer = await Customers.findByIdAndUpdate(id, newPayload);
+      res.json({
+        status: 200,
+        data: customer,
+        message: "Customer updated successfully",
+      });
+    } catch (error) {
+      res.status(404).json({
+        message: new Error(error).message,
+      });
+    }
+  }
+
   // [DELETE] /customer/delete/:id
   async destroy(req, res, next) {
     try {

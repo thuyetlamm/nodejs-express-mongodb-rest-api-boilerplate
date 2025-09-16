@@ -20,6 +20,13 @@ router.post(
   customerController.store
 );
 
+router.put(
+  "/customer/update/:id",
+  authMiddleware,
+  validate(validateCustomer.updateSchema),
+  customerController.update
+);
+
 router.get("/customers", authMiddleware, customerController.index);
 
 module.exports = router;

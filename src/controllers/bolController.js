@@ -97,6 +97,44 @@ class BolController {
     }
   }
 
+  async detailByGGSheet(req, res, next) {
+    try {
+      const { id } = req.params;
+      const query = encodeURIComponent(`where B='${id}'`);
+
+      const bol = await fetch(
+        `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/gviz/tq?tq=${query}`
+      );
+      if (!bol) {
+        return res.status(200).json({
+          data: null,
+          status: 200,
+          message: "Id not found",
+        });
+      }
+      const data = await bol.text();
+      const json = JSON.parse(data.slice(47).slice(0, -2));
+      const rows = json.table.rows;
+      const row = rows.find((row) => row.c[0].v === code);
+      if (!row) {
+        return res.status(200).json({
+          data: null,
+          status: 200,
+          message: "Id not found",
+        });
+      }
+      return res.status(200).json({
+        data: row,
+        status: 200,
+        message: "Get Detail Bol successfully",
+      });
+    } catch (error) {
+      res.status(400).json({
+        message: new Error(error).message,
+      });
+    }
+  }
+
   //[PUT] /bol/update/:id
   async update(req, res, next) {
     try {

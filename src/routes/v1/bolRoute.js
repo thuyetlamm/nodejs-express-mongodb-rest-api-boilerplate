@@ -44,6 +44,13 @@ router.get(
   bolController.detail
 );
 
+router.get(
+  "/bol/detail/ggsheet",
+  authMiddleware,
+  validate(validateBol.detailSchema),
+  bolController.detailByGGSheet
+);
+
 router.put(
   "/bol/update/:id",
   authMiddleware,
