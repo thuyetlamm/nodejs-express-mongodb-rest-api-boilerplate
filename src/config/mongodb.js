@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 

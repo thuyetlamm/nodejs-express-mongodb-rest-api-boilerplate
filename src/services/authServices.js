@@ -1,4 +1,4 @@
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 export const generatorAccessToken = (user) => {
   return jwt.sign(

@@ -1,4 +1,4 @@
-const { default: clientRedis } = require("~/config/redis.config");
+import clientRedis from "../config/redis.config.js";
 
 const rateLimit = async (req, res, next) => {
   const uuid = req.body.uuid;

@@ -1,4 +1,4 @@
-import { Users } from "~/models/User";
+import { Users } from "../models/User.js";
 
 import bcrypt from "bcrypt";
 
@@ -165,4 +165,4 @@ class UserController {
   }
 }
 
-module.exports = new UserController();
+export default new UserController();

@@ -1,11 +1,9 @@
-const XLSX = require("xlsx");
-
+import XLSX from "xlsx";
 import moment from "moment";
-import { Customers } from "~/models/Customer";
-import { FORMAT_DATE, UTC_TIMEZONES } from "~/utils/constants";
-
-const { Bols } = require("~/models/Bol");
-const { BOL_STATUS_ENUM, CATEGORY_LIST } = require("~/types/bols");
+import { Customers } from "../models/Customer.js";
+import { FORMAT_DATE, UTC_TIMEZONES } from "../utils/constants.js";
+import { Bols } from "../models/Bol.js";
+import { BOL_STATUS_ENUM, CATEGORY_LIST } from "../types/bols.js";
 
 class BolsServices {
   async list(queryParams) {

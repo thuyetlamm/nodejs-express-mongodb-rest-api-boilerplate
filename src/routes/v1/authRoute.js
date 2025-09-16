@@ -1,12 +1,12 @@
-const express = require("express");
+import express from "express";
 
 const router = express.Router();
-const authController = require("../../controllers/authController");
-const { validate } = require("~/validations");
-const { validateAuth } = require("~/validations/validateAuth");
+import authController from "../../controllers/authController.js";
+import { validate } from "../../validations/index.js";
+import { validateAuth } from "../../validations/validateAuth.js";
 
 router.post("/auth/refreshToken", authController.refreshToken);
 router.get("/auth/profile", authController.getProfile);
 router.post("/login", validate(validateAuth.loginSchema), authController.login);
 
-module.exports = router;
+export default router;

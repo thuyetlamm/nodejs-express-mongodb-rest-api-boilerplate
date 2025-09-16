@@ -1,15 +1,19 @@
-const express = require("express");
-const morgan = require("morgan");
-const cors = require("cors");
+import express from "express";
+
+import cors from "cors";
 
 import { engine } from "express-handlebars";
 
 import "dotenv/config";
 
 import path from "path";
-import route from "./routes/v1";
-import { connect } from "./config/mongodb";
-import { corsOptions } from "./config/cors";
+import { fileURLToPath } from "url";
+import route from "./routes/v1/index.js";
+import { connect } from "./config/mongodb.js";
+import { corsOptions } from "./config/cors.js";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
@@ -19,7 +23,7 @@ connect().catch(console.log);
 
 // CONFIG CORS
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // PARSE JSON body
 app.use(express.json());

@@ -1,13 +1,19 @@
-const { Bols } = require("~/models/Bol");
-const moment = require("moment");
-const { UTC_TIMEZONES, timestamp, FORMAT_DATE } = require("~/utils/constants");
-const { BOL_STATUS_ENUM, CATEGORY_LIST } = require("~/types/bols");
-const { Customers } = require("~/models/Customer");
-const { BolServices } = require("~/services/bolServices");
-const XLSX = require("xlsx");
-const Excel = require("exceljs");
+import { google } from "googleapis";
+import { readFileSync } from "fs";
 
-const NUMBER_COL = 6;
+import { Bols } from "../models/Bol.js";
+import { CATEGORY_LIST, BOL_STATUS } from "../types/bols.js";
+
+import { BolServices } from "../services/bolServices.js";
+
+const credentials = JSON.parse(readFileSync("credentials.json", "utf8"));
+
+const auth = new google.auth.GoogleAuth({
+  credentials,
+  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
+});
+
+const sheets = google.sheets({ version: "v4", auth });
 
 class BolController {
   //[GET] /bols
@@ -100,35 +106,99 @@ class BolController {
   async detailByGGSheet(req, res, next) {
     try {
       const { code } = req.query;
-      const query = encodeURIComponent(`where B='${code}'`);
+      const response = await sheets.spreadsheets.get({
+        spreadsheetId: process.env.GOOGLE_SHEET_ID,
+      });
 
-      const bol = await fetch(
-        `https://docs.google.com/spreadsheets/d/${process.env.GOOGLE_SHEET_ID}/gviz/tq?tq=${query}`
-      );
-      if (!bol) {
+      const sheetIds = response.data.sheets.map((s) => s.properties.sheetId);
+
+      let rows = [];
+      for (const sheetId of sheetIds) {
+        if (rows.length > 0) break;
+        const url = `https://docs.google.com/spreadsheets/d/${
+          process.env.GOOGLE_SHEET_ID
+        }/gviz/tq?tq=where+B='${code}'&gid=${sheetId.toString()}`;
+
+        const bol = await fetch(url);
+        const data = await bol.text();
+
+        const json = JSON.parse(data.slice(47).slice(0, -2));
+        rows = json.table.rows;
+      }
+
+      if (rows.length < 1) {
         return res.status(200).json({
           data: null,
           status: 200,
-          message: "Id not found",
+          message: "Không tìm thấy mã vận đơn",
         });
       }
-      const data = await bol.text();
-      const json = JSON.parse(data.slice(47).slice(0, -2));
-      const rows = json.table.rows;
-      const row = rows.find((row) => row.c[0].v === code);
+
+      const row = rows.find((row) => row.c[1].v === code);
       if (!row) {
         return res.status(200).json({
           data: null,
           status: 200,
-          message: "Id not found",
+          message: "Không tìm thấy mã vận đơn",
         });
       }
+      const item = row.c ?? [];
+
+      const [
+        col1,
+        col2,
+        col3,
+        col4,
+        col5,
+        col6,
+        col7,
+        col8,
+        col9,
+        col10,
+        col11,
+      ] = item;
+
+      const convertCategoryList = col6?.v?.split(",") || [];
+
+      const categoryAfterConvertToObject = convertCategoryList?.reduce(
+        (acc, category) => {
+          const findCategory = CATEGORY_LIST.find(
+            (item) =>
+              category && item.code.includes(category.trim().toUpperCase())
+          );
+          if (findCategory) {
+            return [...acc, findCategory];
+          }
+          return acc;
+        },
+        []
+      );
+      const findStatus = BOL_STATUS.find((item) => item.title === col8?.v);
+      const resonList = col10?.v?.split(",") || [];
+      const convertReason = resonList.map((item, index) => ({
+        name: item,
+        id: index + 1,
+      }));
       return res.status(200).json({
-        data: row,
+        data: {
+          startDate: col1?.f ?? "",
+          code: col2?.v ?? code,
+          customerCode: col3?.v ?? "",
+          receivedName: col4?.v ?? "",
+          address: col5?.v ?? "",
+          category: categoryAfterConvertToObject,
+          quantity: col7?.v ?? 1,
+          userName: col9?.v ?? "",
+          status: findStatus?.id ?? 1,
+          reason: convertReason,
+          weight: 0,
+          endDate: col11?.f ?? "",
+        },
         status: 200,
-        message: "Get Detail Bol successfully",
+        message: "Lấy chi tiết vận đơn thành công",
       });
     } catch (error) {
+      console.log({ error });
       res.status(400).json({
         message: new Error(error).message,
       });
@@ -316,4 +386,4 @@ class BolController {
   }
 }
 
-module.exports = new BolController();
+export default new BolController();

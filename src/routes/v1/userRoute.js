@@ -1,10 +1,10 @@
-const express = require("express");
+import express from "express";
 
 const router = express.Router();
-const userController = require("../../controllers/userController");
-const { validate } = require("~/validations");
-const { validateUser } = require("~/validations/validateUser");
-const { default: authMiddleware } = require("~/middlewares/authMiddleware");
+import userController from "../../controllers/userController.js";
+import { validate } from "../../validations/index.js";
+import { validateUser } from "../../validations/validateUser.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
 
 // router.delete(
 //   "/customer/delete/:id",
@@ -28,4 +28,4 @@ router.put(
 
 router.get("/users", authMiddleware, userController.index);
 
-module.exports = router;
+export default router;

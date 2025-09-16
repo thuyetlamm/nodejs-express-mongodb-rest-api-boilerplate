@@ -1,11 +1,11 @@
-const express = require("express");
+import express from "express";
 
 const router = express.Router();
-const bolController = require("../../controllers/bolController");
-const { default: authMiddleware } = require("~/middlewares/authMiddleware");
-const { validateBol } = require("~/validations/validateBol");
-const { validate } = require("~/validations");
-const multer = require("multer");
+import bolController from "../../controllers/bolController.js";
+import authMiddleware from "../../middlewares/authMiddleware.js";
+import { validateBol } from "../../validations/validateBol.js";
+import { validate } from "../../validations/index.js";
+import multer from "multer";
 
 const upload = multer();
 
@@ -46,7 +46,6 @@ router.get(
 
 router.get(
   "/bol/detail/ggsheet",
-  authMiddleware,
   validate(validateBol.detailByCode),
   bolController.detailByGGSheet
 );
@@ -74,4 +73,4 @@ router.post(
 
 router.get("/bols", authMiddleware, bolController.index);
 
-module.exports = router;
+export default router;

@@ -1,13 +1,13 @@
-import { Users } from "~/models/User";
+import { Users } from "../models/User.js";
 
 import bcrypt from "bcrypt";
 import {
   generatorAccessToken,
   generatorRefreshToken,
   refreshTokenService,
-} from "~/services/authServices";
+} from "../services/authServices.js";
 
-const jwt = require("jsonwebtoken");
+import jwt from "jsonwebtoken";
 
 const regex =
   /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -127,4 +127,4 @@ class AuthController {
   }
 }
 
-module.exports = new AuthController();
+export default new AuthController();

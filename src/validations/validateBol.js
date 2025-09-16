@@ -1,5 +1,5 @@
 import * as yup from "yup";
-import { REGEX_CODE_BOL } from "~/regex/bol";
+import { REGEX_CODE_BOL } from "../regex/bol.js";
 // Hidden for simplicity
 
 const createSchema = yup.object({

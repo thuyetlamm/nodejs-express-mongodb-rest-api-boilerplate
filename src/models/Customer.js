@@ -1,6 +1,8 @@
-import { Schema, model } from "mongoose";
-const timeZone = require("mongoose-timezone");
+import mongoose from "mongoose";
+import timeZone from "mongoose-timezone";
 
+const Schema = mongoose.Schema;
+const model = mongoose.model;
 const Customer = new Schema(
   {
     name: { type: String, maxLength: 100 },

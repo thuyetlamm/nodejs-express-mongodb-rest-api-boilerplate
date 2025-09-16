@@ -1,4 +1,4 @@
-import { Customers } from "~/models/Customer";
+import { Customers } from "../models/Customer.js";
 
 class CustomerController {
   // [GET] /customers
@@ -88,4 +88,4 @@ class CustomerController {
   }
 }
 
-module.exports = new CustomerController();
+export default new CustomerController();
