@@ -6,7 +6,7 @@ import { CATEGORY_LIST, BOL_STATUS } from "../types/bols.js";
 
 import { BolServices } from "../services/bolServices.js";
 
-const credentials = JSON.parse(readFileSync("credentials.json", "utf8"));
+const credentials = JSON.parse(process.env.GOOGLE_CREDENTIAL, "utf8");
 
 const auth = new google.auth.GoogleAuth({
   credentials,
