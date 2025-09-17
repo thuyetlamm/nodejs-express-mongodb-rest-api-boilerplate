@@ -23,7 +23,7 @@ connect().catch(console.log);
 
 // CONFIG CORS
 
-app.use(cors(corsOptions));
+app.use(cors());
 
 // PARSE JSON body
 app.use(express.json());

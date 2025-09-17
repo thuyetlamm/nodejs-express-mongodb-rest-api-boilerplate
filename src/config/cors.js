@@ -1,9 +1,4 @@
-const WHITELIST_DOMAINS = [
-  "https://www.skypost.vn",
-  "https://lammaiwedding.vercel.app",
-  "https://dungthanhwedding.vercel.app",
-  "http://localhost:8085",
-];
+const WHITELIST_DOMAINS = ["https://www.skypost.vn", "http://localhost:8085"];
 
 export const corsOptions = {
   origin: function (origin, callback) {
