@@ -67,6 +67,7 @@ class BolController {
           message: "Id not found",
         });
       }
+      res.setHeader("Cache-Control", "public, max-age=600, s-maxage=3600");
 
       return res.status(200).json({
         data: bol,
@@ -179,6 +180,8 @@ class BolController {
         name: item,
         id: index + 1,
       }));
+
+      res.setHeader("Cache-Control", "public, max-age=600, s-maxage=3600");
       return res.status(200).json({
         data: {
           startDate: col1?.f ?? "",
