@@ -24,6 +24,13 @@ export const BOL_STATUS = [
     title: "Hoàn lại",
   },
 ];
+
+export const BOL_STATUS_VI = new Map([
+  [1, { id: 1, title: "Mới" }],
+  [2, { id: 2, title: "Phát thành công" }],
+  [3, { id: 3, title: "Phát thất bại" }],
+  [4, { id: 4, title: "Hoàn về" }],
+]);
 export const CATEGORY_LIST = [
   {
     id: 1,

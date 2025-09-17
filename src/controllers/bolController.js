@@ -1,19 +1,7 @@
-import { google } from "googleapis";
-import { readFileSync } from "fs";
-
 import { Bols } from "../models/Bol.js";
-import { CATEGORY_LIST, BOL_STATUS } from "../types/bols.js";
 
 import { BolServices } from "../services/bolServices.js";
-
-const credentials = JSON.parse(process.env.GOOGLE_CREDENTIAL, "utf8");
-
-const auth = new google.auth.GoogleAuth({
-  credentials,
-  scopes: ["https://www.googleapis.com/auth/spreadsheets"],
-});
-
-const sheets = google.sheets({ version: "v4", auth });
+import redisService from "../services/redisService.js";
 
 class BolController {
   //[GET] /bols
@@ -106,94 +94,52 @@ class BolController {
   async detailByGGSheet(req, res, next) {
     try {
       const { code } = req.query;
-      const response = await sheets.spreadsheets.get({
-        spreadsheetId: process.env.GOOGLE_SHEET_ID,
-      });
 
-      const sheetIds = response.data.sheets.map((s) => s.properties.sheetId);
+      const data = await BolServices.detailByExternal(code);
 
-      let rows = [];
-      for (const sheetId of sheetIds) {
-        if (rows.length > 0) break;
-        const url = `https://docs.google.com/spreadsheets/d/${
-          process.env.GOOGLE_SHEET_ID
-        }/gviz/tq?tq=where+B='${code}'&gid=${sheetId.toString()}`;
-
-        const bol = await fetch(url);
-        const data = await bol.text();
-
-        const json = JSON.parse(data.slice(47).slice(0, -2));
-        rows = json.table.rows;
-      }
-
-      if (rows.length < 1) {
+      if (data) {
         return res.status(200).json({
-          data: null,
+          data,
           status: 200,
-          message: "Không tìm thấy mã vận đơn",
+          message: "Lấy chi tiết vận đơn thành công",
         });
       }
 
-      const row = rows.find((row) => row.c[1].v === code);
+      const redisKey = `bol:detailBySheet:${code}`;
+
+      const cachedData = await redisService.get(redisKey);
+
+      if (cachedData !== null) {
+        if (Object.keys(cachedData).length === 0) {
+          redisService.set(redisKey, {}, 60 * 60);
+
+          return res.status(200).json({
+            data: null,
+            status: 200,
+            message: "Không tìm thấy mã vận đơn",
+          });
+        }
+        return res.status(200).json({
+          data: cachedData,
+          status: 200,
+          message: "Lấy chi tiết vận đơn thành công",
+        });
+      }
+
+      const row = await BolServices.detailBySheet(code);
+
       if (!row) {
+        redisService.set(redisKey, {}, 60 * 60);
         return res.status(200).json({
           data: null,
           status: 200,
           message: "Không tìm thấy mã vận đơn",
         });
       }
-      const item = row.c ?? [];
 
-      const [
-        col1,
-        col2,
-        col3,
-        col4,
-        col5,
-        col6,
-        col7,
-        col8,
-        col9,
-        col10,
-        col11,
-      ] = item;
-
-      const convertCategoryList = col6?.v?.split(",") || [];
-
-      const categoryAfterConvertToObject = convertCategoryList?.reduce(
-        (acc, category) => {
-          const findCategory = CATEGORY_LIST.find(
-            (item) =>
-              category && item.code.includes(category.trim().toUpperCase())
-          );
-          if (findCategory) {
-            return [...acc, findCategory];
-          }
-          return acc;
-        },
-        []
-      );
-      const findStatus = BOL_STATUS.find((item) => item.title === col8?.v);
-      const resonList = col10?.v?.split(",") || [];
-      const convertReason = resonList.map((item, index) => ({
-        name: item,
-        id: index + 1,
-      }));
+      redisService.set(redisKey, row, 60 * 60);
       return res.status(200).json({
-        data: {
-          startDate: col1?.f ?? "",
-          code: col2?.v ?? code,
-          customerCode: col3?.v ?? "",
-          receivedName: col4?.v ?? "",
-          address: col5?.v ?? "",
-          category: categoryAfterConvertToObject,
-          quantity: col7?.v ?? 1,
-          userName: col9?.v ?? "",
-          status: findStatus?.id ?? 1,
-          reason: convertReason,
-          weight: 0,
-          endDate: col11?.f ?? "",
-        },
+        data: row,
         status: 200,
         message: "Lấy chi tiết vận đơn thành công",
       });

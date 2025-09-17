@@ -75,7 +75,7 @@ const detailByCode = yup.object({
       .trim()
       .transform((value) => value.toUpperCase())
       // .matches(REGEX_CODE_BOL, "Code incorrect format")
-      .required("The id is required"),
+      .required("Không tìm thấy mã vận đơn"),
     status: yup.number().typeError("The field status is required"),
   }),
 });
