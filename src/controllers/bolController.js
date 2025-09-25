@@ -3,6 +3,8 @@ import { Bols } from "../models/Bol.js";
 import { BolServices } from "../services/bolServices.js";
 import redisService from "../services/redisService.js";
 
+const TTL_CACHE = 60 * 5;
+
 class BolController {
   //[GET] /bols
   async index(req, res, next) {
@@ -111,7 +113,7 @@ class BolController {
 
       if (cachedData !== null) {
         if (Object.keys(cachedData).length === 0) {
-          redisService.set(redisKey, {}, 60 * 60);
+          redisService.set(redisKey, {}, TTL_CACHE);
 
           return res.status(200).json({
             data: null,
@@ -129,7 +131,7 @@ class BolController {
       const row = await BolServices.detailBySheet(code);
 
       if (!row) {
-        redisService.set(redisKey, {}, 60 * 60);
+        redisService.set(redisKey, {}, TTL_CACHE);
         return res.status(200).json({
           data: null,
           status: 200,
@@ -137,7 +139,7 @@ class BolController {
         });
       }
 
-      redisService.set(redisKey, row, 60 * 60);
+      redisService.set(redisKey, row, TTL_CACHE);
       return res.status(200).json({
         data: row,
         status: 200,
