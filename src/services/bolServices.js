@@ -235,13 +235,14 @@ class BolsServices {
   }
 
   mockTrackingData(data) {
+    const currentTime = moment().utc();
     const date = moment(data.startDate, "DD/MM/YYYY").utc();
     const endDate = data?.endDate
       ? moment(data.endDate, "DD/MM/YYYY").utc()
       : null;
 
     const resultTrackingEnd =
-      data?.status > BOL_STATUS_ENUM.NEW
+      data?.status > BOL_STATUS_ENUM.DILIVERY
         ? [
             {
               dateChange: moment(endDate ?? date, "DD/MM/YYYY")
@@ -258,7 +259,61 @@ class BolsServices {
           ]
         : [];
 
-    return [
+    const resultDelivery =
+      data?.status >= BOL_STATUS_ENUM.DILIVERY
+        ? [
+            {
+              dateChange: moment(endDate ?? date)
+                .add(13, "hours")
+                .format("YYYY-MM-DD HH:mm"),
+              location: data?.address,
+              statusName: "Đến bưu cục",
+              notes: `Nhận và chia ${data?.code}`,
+            },
+            {
+              dateChange: moment(endDate ?? date)
+                .add(13, "hours")
+                .format("YYYY-MM-DD HH:mm"),
+              location: data?.address,
+              statusName: "Giao bưu tá phát",
+              notes: "",
+            },
+            {
+              dateChange: moment(endDate ?? date)
+                .add(13, "hours")
+                .add(30, "minutes")
+                .format("YYYY-MM-DD HH:mm"),
+              location: data?.address,
+              statusName: "Đi phát",
+              notes: "",
+            },
+          ]
+        : [];
+    const resultTransfer =
+      data?.status >= BOL_STATUS_ENUM.TRANSFER
+        ? [
+            {
+              dateChange: moment(date)
+                .add(2, "hour")
+                .add(14, "minutes")
+                .format("YYYY-MM-DD HH:mm"),
+              location: "TSN - HỒ CHÍ MINH",
+              statusName: "Đang chuyển tiếp",
+              notes: "Gửi chuyến thư tải kiện",
+            },
+            {
+              dateChange: moment(date)
+                .add(4, "hour")
+                .add(25, "minutes")
+                .format("YYYY-MM-DD HH:mm"),
+              location: "TSN - HỒ CHÍ MINH",
+              statusName: "Đang chuyển tiếp",
+              notes: "",
+            },
+          ]
+        : [];
+
+    const result = [
       {
         dateChange: moment(date).add(1, "hour").format("YYYY-MM-DD HH:mm"),
         location: "TSN - HỒ CHÍ MINH",
@@ -271,51 +326,14 @@ class BolsServices {
         statusName: "Đóng gói",
         notes: "Đóng vào chuyến thư tải kiện",
       },
-      {
-        dateChange: moment(date)
-          .add(2, "hour")
-          .add(14, "minutes")
-          .format("YYYY-MM-DD HH:mm"),
-        location: "TSN - HỒ CHÍ MINH",
-        statusName: "Đang chuyển tiếp",
-        notes: "Gửi chuyến thư tải kiện",
-      },
-      {
-        dateChange: moment(date)
-          .add(4, "hour")
-          .add(25, "minutes")
-          .format("YYYY-MM-DD HH:mm"),
-        location: "TSN - HỒ CHÍ MINH",
-        statusName: "Đang chuyển tiếp",
-        notes: "",
-      },
-      {
-        dateChange: moment(endDate ?? date)
-          .add(13, "hours")
-          .format("YYYY-MM-DD HH:mm"),
-        location: data?.address,
-        statusName: "Đến bưu cục",
-        notes: `Nhận và chia ${data?.code}`,
-      },
-      {
-        dateChange: moment(endDate ?? date)
-          .add(13, "hours")
-          .format("YYYY-MM-DD HH:mm"),
-        location: data?.address,
-        statusName: "Giao bưu tá phát",
-        notes: "",
-      },
-      {
-        dateChange: moment(endDate ?? date)
-          .add(13, "hours")
-          .add(30, "minutes")
-          .format("YYYY-MM-DD HH:mm"),
-        location: data?.address,
-        statusName: "Đi phát",
-        notes: "",
-      },
+      ...resultTransfer,
+      ...resultDelivery,
       ...resultTrackingEnd,
     ];
+
+    return result.filter((item) =>
+      moment(item.dateChange).isBefore(currentTime)
+    );
   }
 
   convertDataBySheet(data) {

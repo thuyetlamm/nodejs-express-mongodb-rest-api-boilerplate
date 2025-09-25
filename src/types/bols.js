@@ -1,9 +1,11 @@
 export const BOL_STATUS_ENUM = {
   ALL: -1,
-  NEW: 0,
-  FINISHED: 1,
-  UNSCCESSFUL: 2,
-  REFURNING: 3,
+  NEW: 1,
+  TRANSFER: 2,
+  DILIVERY: 3,
+  FINISHED: 4,
+  UNSCCESSFUL: 5,
+  REFURNING: 6,
 };
 
 export const BOL_STATUS = [
@@ -13,23 +15,33 @@ export const BOL_STATUS = [
   },
   {
     id: 2,
-    title: "Phát thành công",
+    title: "Đang chuyển tiếp",
   },
   {
     id: 3,
-    title: "Phát thất bại",
+    title: "Đi phát",
   },
   {
     id: 4,
+    title: "Phát thành công",
+  },
+  {
+    id: 5,
+    title: "Phát thất bại",
+  },
+  {
+    id: 6,
     title: "Hoàn lại",
   },
 ];
 
 export const BOL_STATUS_VI = new Map([
   [1, { id: 1, title: "Mới" }],
-  [2, { id: 2, title: "Phát thành công" }],
-  [3, { id: 3, title: "Phát thất bại" }],
-  [4, { id: 4, title: "Hoàn về" }],
+  [2, { id: 2, title: "Đang chuyển tiếp" }],
+  [3, { id: 3, title: "Đi phát" }],
+  [4, { id: 4, title: "Phát thành công" }],
+  [5, { id: 5, title: "Phát thất bại" }],
+  [6, { id: 6, title: "Hoàn lại" }],
 ]);
 export const CATEGORY_LIST = [
   {
