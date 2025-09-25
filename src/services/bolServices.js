@@ -236,18 +236,31 @@ class BolsServices {
 
   mockTrackingData(data) {
     const currentTime = moment();
+    const currentHour = currentTime.hour();
+
     const baseDate = moment(data.startDate, "DD/MM/YYYY").add(17, "hours");
 
-    const endDate = data?.endDate ? moment(data.endDate, "DD/MM/YYYY") : null;
+    const endDate = data?.endDate
+      ? moment(data.endDate, "DD/MM/YYYY HH:mm")
+      : null;
+
+    const endDateHour = endDate ? endDate.hour() : 0;
+    const hasHour = endDateHour > 0;
 
     const resultTrackingEnd =
       data?.status > BOL_STATUS_ENUM.DILIVERY
         ? [
             {
-              dateChange: moment(endDate ?? baseDate, "DD/MM/YYYY")
-                .add(20 + Math.floor(Math.random() * 7), "hours")
-                .add(30, "minutes")
-                .format("YYYY-MM-DD HH:mm"),
+              dateChange: !endDate
+                ? moment(baseDate, "DD/MM/YYYY")
+                    .add(16 + Math.floor(Math.random() * 7), "hours")
+                    .add(30, "minutes")
+                    .format("YYYY-MM-DD HH:mm")
+                : hasHour
+                ? endDate
+                : moment(endDate, "DD/MM/YYYY HH:mm").format(
+                    "YYYY-MM-DD 17:30"
+                  ),
               location: data?.address,
               statusName: BOL_STATUS_VI.get(data?.status)?.title ?? "",
               notes:
@@ -262,26 +275,25 @@ class BolsServices {
       data?.status >= BOL_STATUS_ENUM.DILIVERY
         ? [
             {
-              dateChange: moment(endDate ?? baseDate)
-                .add(13, "hours")
-                .format("YYYY-MM-DD HH:mm"),
+              dateChange: hasHour
+                ? endDate.format("YYYY-MM-DD 06:00")
+                : moment(endDate).format("YYYY-MM-DD 06:00"),
               location: data?.address,
               statusName: "Đến bưu cục",
               notes: `Nhận và chia ${data?.code}`,
             },
             {
-              dateChange: moment(endDate ?? baseDate)
-                .add(13, "hours")
-                .format("YYYY-MM-DD HH:mm"),
+              dateChange: hasHour
+                ? endDate.format("YYYY-MM-DD 06:00")
+                : moment(endDate ?? baseDate).format("YYYY-MM-DD 06:30"),
               location: data?.address,
               statusName: "Giao bưu tá phát",
               notes: "",
             },
             {
-              dateChange: moment(endDate ?? baseDate)
-                .add(13, "hours")
-                .add(30, "minutes")
-                .format("YYYY-MM-DD HH:mm"),
+              dateChange: hasHour
+                ? endDate.format("YYYY-MM-DD 06:30")
+                : moment(endDate ?? baseDate).format("YYYY-MM-DD 07:00"),
               location: data?.address,
               statusName: "Đi phát",
               notes: "",
