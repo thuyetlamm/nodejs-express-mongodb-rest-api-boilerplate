@@ -257,7 +257,7 @@ class BolsServices {
                     .add(30, "minutes")
                     .format("YYYY-MM-DD HH:mm")
                 : hasHour
-                ? endDate
+                ? endDate.format("YYYY-MM-DD HH:mm")
                 : moment(endDate, "DD/MM/YYYY HH:mm").format(
                     "YYYY-MM-DD 17:30"
                   ),
