@@ -281,7 +281,9 @@ class BolsServices {
                       .subtract(1, "day")
                       .format("YYYY-MM-DD 06:00")
                   : moment(endDate).format("YYYY-MM-DD 06:00")
-                : moment(endDate).format("YYYY-MM-DD 06:00"),
+                : moment(endDate ?? baseDate)
+                    .add(Number(!endDate), "day")
+                    .format("YYYY-MM-DD 06:00"),
               location: data?.address,
               statusName: "Đến bưu cục",
               notes: `Nhận và chia ${data?.code}`,
@@ -293,7 +295,9 @@ class BolsServices {
                       .subtract(1, "day")
                       .format("YYYY-MM-DD 06:00")
                   : moment(endDate).format("YYYY-MM-DD 06:00")
-                : moment(endDate ?? baseDate).format("YYYY-MM-DD 06:30"),
+                : moment(endDate ?? baseDate)
+                    .add(Number(!endDate), "day")
+                    .format("YYYY-MM-DD 06:30"),
               location: data?.address,
               statusName: "Giao bưu tá phát",
               notes: "",
@@ -305,7 +309,9 @@ class BolsServices {
                       .subtract(1, "day")
                       .format("YYYY-MM-DD 06:30")
                   : moment(endDate).format("YYYY-MM-DD 06:30")
-                : moment(endDate ?? baseDate).format("YYYY-MM-DD 07:00"),
+                : moment(endDate ?? baseDate)
+                    .add(Number(!endDate), "day")
+                    .format("YYYY-MM-DD 07:00"),
               location: data?.address,
               statusName: "Đi phát",
               notes: "",
