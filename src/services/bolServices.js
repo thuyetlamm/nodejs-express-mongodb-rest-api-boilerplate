@@ -235,17 +235,16 @@ class BolsServices {
   }
 
   mockTrackingData(data) {
-    const currentTime = moment().utc();
-    const date = moment(data.startDate, "DD/MM/YYYY").utc();
-    const endDate = data?.endDate
-      ? moment(data.endDate, "DD/MM/YYYY").utc()
-      : null;
+    const currentTime = moment();
+    const baseDate = moment(data.startDate, "DD/MM/YYYY").add(17, "hours");
+
+    const endDate = data?.endDate ? moment(data.endDate, "DD/MM/YYYY") : null;
 
     const resultTrackingEnd =
       data?.status > BOL_STATUS_ENUM.DILIVERY
         ? [
             {
-              dateChange: moment(endDate ?? date, "DD/MM/YYYY")
+              dateChange: moment(endDate ?? baseDate, "DD/MM/YYYY")
                 .add(20 + Math.floor(Math.random() * 7), "hours")
                 .add(30, "minutes")
                 .format("YYYY-MM-DD HH:mm"),
@@ -263,7 +262,7 @@ class BolsServices {
       data?.status >= BOL_STATUS_ENUM.DILIVERY
         ? [
             {
-              dateChange: moment(endDate ?? date)
+              dateChange: moment(endDate ?? baseDate)
                 .add(13, "hours")
                 .format("YYYY-MM-DD HH:mm"),
               location: data?.address,
@@ -271,7 +270,7 @@ class BolsServices {
               notes: `Nhận và chia ${data?.code}`,
             },
             {
-              dateChange: moment(endDate ?? date)
+              dateChange: moment(endDate ?? baseDate)
                 .add(13, "hours")
                 .format("YYYY-MM-DD HH:mm"),
               location: data?.address,
@@ -279,7 +278,7 @@ class BolsServices {
               notes: "",
             },
             {
-              dateChange: moment(endDate ?? date)
+              dateChange: moment(endDate ?? baseDate)
                 .add(13, "hours")
                 .add(30, "minutes")
                 .format("YYYY-MM-DD HH:mm"),
@@ -289,11 +288,12 @@ class BolsServices {
             },
           ]
         : [];
+
     const resultTransfer =
       data?.status >= BOL_STATUS_ENUM.TRANSFER
         ? [
             {
-              dateChange: moment(date)
+              dateChange: moment(baseDate)
                 .add(2, "hour")
                 .add(14, "minutes")
                 .format("YYYY-MM-DD HH:mm"),
@@ -302,7 +302,7 @@ class BolsServices {
               notes: "Gửi chuyến thư tải kiện",
             },
             {
-              dateChange: moment(date)
+              dateChange: moment(baseDate)
                 .add(4, "hour")
                 .add(25, "minutes")
                 .format("YYYY-MM-DD HH:mm"),
@@ -315,13 +315,13 @@ class BolsServices {
 
     const result = [
       {
-        dateChange: moment(date).add(1, "hour").format("YYYY-MM-DD HH:mm"),
+        dateChange: moment(baseDate).add(1, "hour").format("YYYY-MM-DD HH:mm"),
         location: "TSN - HỒ CHÍ MINH",
         statusName: "Nhập hệ thống",
         notes: "",
       },
       {
-        dateChange: moment(date).add(1, "hour").format("YYYY-MM-DD HH:mm"),
+        dateChange: moment(baseDate).add(1, "hour").format("YYYY-MM-DD HH:mm"),
         location: "TSN - HỒ CHÍ MINH",
         statusName: "Đóng gói",
         notes: "Đóng vào chuyến thư tải kiện",

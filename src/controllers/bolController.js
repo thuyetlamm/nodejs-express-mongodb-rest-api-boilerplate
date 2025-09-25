@@ -3,7 +3,7 @@ import { Bols } from "../models/Bol.js";
 import { BolServices } from "../services/bolServices.js";
 import redisService from "../services/redisService.js";
 
-const TTL_CACHE = 60 * 5;
+const TTL_CACHE = 60 * 10;
 
 class BolController {
   //[GET] /bols
@@ -109,7 +109,11 @@ class BolController {
 
       const redisKey = `bol:detailBySheet:${code}`;
 
-      const cachedData = await redisService.get(redisKey);
+      let cachedData = null;
+
+      try {
+        cachedData = await redisService.get(redisKey);
+      } catch (error) {}
 
       if (cachedData !== null) {
         if (Object.keys(cachedData).length === 0) {
@@ -131,7 +135,7 @@ class BolController {
       const row = await BolServices.detailBySheet(code);
 
       if (!row) {
-        redisService.set(redisKey, {}, TTL_CACHE);
+        // redisService.set(redisKey, {}, TTL_CACHE);
         return res.status(200).json({
           data: null,
           status: 200,
@@ -139,7 +143,7 @@ class BolController {
         });
       }
 
-      redisService.set(redisKey, row, TTL_CACHE);
+      // redisService.set(redisKey, row, TTL_CACHE);
       return res.status(200).json({
         data: row,
         status: 200,
