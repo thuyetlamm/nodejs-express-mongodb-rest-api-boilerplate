@@ -111,9 +111,9 @@ class BolController {
 
       let cachedData = null;
 
-      try {
-        cachedData = await redisService.get(redisKey);
-      } catch (error) {}
+      // try {
+      //   cachedData = await redisService.get(redisKey);
+      // } catch (error) {}
 
       if (cachedData !== null) {
         if (Object.keys(cachedData).length === 0) {

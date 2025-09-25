@@ -257,7 +257,7 @@ class BolsServices {
                     .add(30, "minutes")
                     .format("YYYY-MM-DD HH:mm")
                 : hasHour
-                ? endDate.format("YYYY-MM-DD HH:mm")
+                ? moment(endDate).format("YYYY-MM-DD HH:mm")
                 : moment(endDate, "DD/MM/YYYY HH:mm").format(
                     "YYYY-MM-DD 17:30"
                   ),
@@ -276,7 +276,11 @@ class BolsServices {
         ? [
             {
               dateChange: hasHour
-                ? endDate.format("YYYY-MM-DD 06:00")
+                ? currentHour < 7
+                  ? moment(endDate)
+                      .subtract(1, "day")
+                      .format("YYYY-MM-DD 06:00")
+                  : moment(endDate).format("YYYY-MM-DD 06:00")
                 : moment(endDate).format("YYYY-MM-DD 06:00"),
               location: data?.address,
               statusName: "Đến bưu cục",
@@ -284,7 +288,11 @@ class BolsServices {
             },
             {
               dateChange: hasHour
-                ? endDate.format("YYYY-MM-DD 06:00")
+                ? currentHour < 7
+                  ? moment(endDate)
+                      .subtract(1, "day")
+                      .format("YYYY-MM-DD 06:00")
+                  : moment(endDate).format("YYYY-MM-DD 06:00")
                 : moment(endDate ?? baseDate).format("YYYY-MM-DD 06:30"),
               location: data?.address,
               statusName: "Giao bưu tá phát",
@@ -292,7 +300,11 @@ class BolsServices {
             },
             {
               dateChange: hasHour
-                ? endDate.format("YYYY-MM-DD 06:30")
+                ? currentHour < 7
+                  ? moment(endDate)
+                      .subtract(1, "day")
+                      .format("YYYY-MM-DD 06:30")
+                  : moment(endDate).format("YYYY-MM-DD 06:30")
                 : moment(endDate ?? baseDate).format("YYYY-MM-DD 07:00"),
               location: data?.address,
               statusName: "Đi phát",
