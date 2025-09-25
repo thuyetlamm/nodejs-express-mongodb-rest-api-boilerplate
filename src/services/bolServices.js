@@ -332,7 +332,10 @@ class BolsServices {
     ];
 
     return result.filter((item) =>
-      moment(item.dateChange).isBefore(currentTime)
+      moment(item.dateChange, "YYYY-MM-DD HH:mm").isSameOrBefore(
+        currentTime,
+        "minute"
+      )
     );
   }
 
