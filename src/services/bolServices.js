@@ -348,11 +348,10 @@ class BolsServices {
       ...resultTrackingEnd,
     ];
 
-    return result.filter((item) =>
-      moment(item.dateChange, "YYYY-MM-DD HH:mm").isSameOrBefore(
-        moment(currentTime, "YYYY-MM-DD HH:mm"),
-        "minute"
-      )
+    return result.filter(
+      (item) =>
+        moment(item.dateChange, "YYYY-MM-DD HH:mm").valueOf() <=
+        moment().valueOf()
     );
   }
 
