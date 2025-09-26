@@ -1,5 +1,5 @@
 import XLSX from "xlsx";
-import moment from "moment";
+import moment from "moment-timezone";
 import { google } from "googleapis";
 import { Customers } from "../models/Customer.js";
 import { FORMAT_DATE, UTC_TIMEZONES } from "../utils/constants.js";
@@ -10,6 +10,8 @@ import {
   BOL_STATUS_VI,
   BOL_STATUS,
 } from "../types/bols.js";
+
+moment.tz.setDefault(UTC_TIMEZONES);
 
 const credentials = JSON.parse(process.env.GOOGLE_CREDENTIAL, "utf8");
 
@@ -347,8 +349,6 @@ class BolsServices {
       ...resultDelivery,
       ...resultTrackingEnd,
     ];
-
-    return result;
 
     return result.filter(
       (item) =>

@@ -1,4 +1,4 @@
-export const UTC_TIMEZONES = "Asia/Bangkok";
+export const UTC_TIMEZONES = "Asia/Ho_Chi_Minh";
 
 export const FORMAT_DATE = {
   YMD: "YYYY-MM-DD",
