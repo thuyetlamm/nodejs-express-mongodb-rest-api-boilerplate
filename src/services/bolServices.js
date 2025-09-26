@@ -236,7 +236,6 @@ class BolsServices {
 
   mockTrackingData(data) {
     const currentTime = moment();
-    const currentHour = currentTime.hour();
 
     const baseDate = moment(data.startDate, "DD/MM/YYYY").add(17, "hours");
 
@@ -276,11 +275,7 @@ class BolsServices {
         ? [
             {
               dateChange: hasHour
-                ? currentHour < 7
-                  ? moment(endDate)
-                      .subtract(1, "day")
-                      .format("YYYY-MM-DD 06:00")
-                  : moment(endDate).format("YYYY-MM-DD 06:00")
+                ? moment(endDate).format("YYYY-MM-DD 06:00")
                 : moment(endDate ?? baseDate)
                     .add(Number(!endDate), "day")
                     .format("YYYY-MM-DD 06:00"),
@@ -290,11 +285,7 @@ class BolsServices {
             },
             {
               dateChange: hasHour
-                ? currentHour < 7
-                  ? moment(endDate)
-                      .subtract(1, "day")
-                      .format("YYYY-MM-DD 06:00")
-                  : moment(endDate).format("YYYY-MM-DD 06:00")
+                ? moment(endDate).format("YYYY-MM-DD 06:00")
                 : moment(endDate ?? baseDate)
                     .add(Number(!endDate), "day")
                     .format("YYYY-MM-DD 06:30"),
@@ -304,11 +295,7 @@ class BolsServices {
             },
             {
               dateChange: hasHour
-                ? currentHour < 7
-                  ? moment(endDate)
-                      .subtract(1, "day")
-                      .format("YYYY-MM-DD 06:30")
-                  : moment(endDate).format("YYYY-MM-DD 06:30")
+                ? moment(endDate).format("YYYY-MM-DD 06:30")
                 : moment(endDate ?? baseDate)
                     .add(Number(!endDate), "day")
                     .format("YYYY-MM-DD 07:00"),
@@ -363,7 +350,7 @@ class BolsServices {
 
     return result.filter((item) =>
       moment(item.dateChange, "YYYY-MM-DD HH:mm").isSameOrBefore(
-        currentTime,
+        moment(currentTime, "YYYY-MM-DD HH:mm"),
         "minute"
       )
     );
