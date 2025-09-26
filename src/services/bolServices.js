@@ -348,6 +348,8 @@ class BolsServices {
       ...resultTrackingEnd,
     ];
 
+    return result;
+
     return result.filter(
       (item) =>
         moment(item.dateChange, "YYYY-MM-DD HH:mm").valueOf() <=
