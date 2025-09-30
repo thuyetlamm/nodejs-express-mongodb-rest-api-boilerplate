@@ -97,15 +97,15 @@ class BolController {
     try {
       const { code } = req.query;
 
-      const data = await BolServices.detailByExternal(code);
+      // const data = await BolServices.detailByExternal(code);
 
-      if (data) {
-        return res.status(200).json({
-          data,
-          status: 200,
-          message: "Lấy chi tiết vận đơn thành công",
-        });
-      }
+      // if (data) {
+      //   return res.status(200).json({
+      //     data,
+      //     status: 200,
+      //     message: "Lấy chi tiết vận đơn thành công",
+      //   });
+      // }
 
       const redisKey = `bol:detailBySheet:${code}`;
 
