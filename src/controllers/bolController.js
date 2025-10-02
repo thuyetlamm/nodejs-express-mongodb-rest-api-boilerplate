@@ -135,7 +135,7 @@ class BolController {
       const row = await BolServices.detailBySheet(code);
 
       if (!row) {
-        // redisService.set(redisKey, {}, TTL_CACHE);
+        redisService.set(redisKey, {}, TTL_CACHE);
         return res.status(200).json({
           data: null,
           status: 200,
@@ -143,7 +143,7 @@ class BolController {
         });
       }
 
-      // redisService.set(redisKey, row, TTL_CACHE);
+      redisService.set(redisKey, row, TTL_CACHE);
       return res.status(200).json({
         data: row,
         status: 200,
