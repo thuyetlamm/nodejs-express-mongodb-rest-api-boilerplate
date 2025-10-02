@@ -117,8 +117,6 @@ class BolController {
 
       if (cachedData !== null) {
         if (Object.keys(cachedData).length === 0) {
-          redisService.set(redisKey, {}, TTL_CACHE);
-
           return res.status(200).json({
             data: null,
             status: 200,
