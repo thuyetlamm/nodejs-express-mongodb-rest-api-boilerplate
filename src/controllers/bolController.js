@@ -97,23 +97,23 @@ class BolController {
     try {
       const { code } = req.query;
 
-      // const data = await BolServices.detailByExternal(code);
+      const response = await BolServices.detailByExternal(code);
 
-      // if (data) {
-      //   return res.status(200).json({
-      //     data,
-      //     status: 200,
-      //     message: "Lấy chi tiết vận đơn thành công",
-      //   });
-      // }
+      if (response) {
+        return res.status(200).json({
+          data: response,
+          status: 200,
+          message: "Lấy chi tiết vận đơn thành công",
+        });
+      }
 
       const redisKey = `bol:detailBySheet:${code}`;
 
       let cachedData = null;
 
-      // try {
-      //   cachedData = await redisService.get(redisKey);
-      // } catch (error) {}
+      try {
+        cachedData = await redisService.get(redisKey);
+      } catch (error) {}
 
       if (cachedData !== null) {
         if (Object.keys(cachedData).length === 0) {

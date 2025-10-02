@@ -12,26 +12,32 @@ export const BOL_STATUS = [
   {
     id: 1,
     title: "Mới",
+    key: "DATIEPNHAN",
   },
   {
     id: 2,
     title: "Đang chuyển tiếp",
+    key: "DANGVANCHUYEN",
   },
   {
     id: 3,
     title: "Đi phát",
+    key: "DANGDIPHAT",
   },
   {
     id: 4,
     title: "Phát thành công",
+    key: "PHATTHANHCONG",
   },
   {
     id: 5,
     title: "Phát thất bại",
+    key: "PHATTHATBAI",
   },
   {
     id: 6,
     title: "Hoàn lại",
+    key: "CHOCHUYENHOAN",
   },
 ];
 

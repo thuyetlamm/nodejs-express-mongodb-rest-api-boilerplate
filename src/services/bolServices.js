@@ -4,12 +4,14 @@ import { google } from "googleapis";
 import { Customers } from "../models/Customer.js";
 import { FORMAT_DATE, UTC_TIMEZONES } from "../utils/constants.js";
 import { Bols } from "../models/Bol.js";
+import externalService from "../third-party/247.js";
+
 import {
   BOL_STATUS_ENUM,
   CATEGORY_LIST,
   BOL_STATUS_VI,
   BOL_STATUS,
-} from "../types/bols.js";
+} from "../constant/bols.js";
 
 moment.tz.setDefault(UTC_TIMEZONES);
 
@@ -452,61 +454,91 @@ class BolsServices {
   }
 
   convertDataByExternal(data) {
-    const { order, trackingData = [] } = data ?? {};
-    if (!order) return null;
+    const {
+      acceptDate,
+      trackings = [],
+      mailerTypeID,
+      receiverName,
+      statusName,
+      priceInfo = [],
+      realWeight,
+      quantity,
+      orderCode,
+      delayNote,
+      trackingName,
+      confirmImage = [],
+    } = data ?? {};
+    if (!orderCode) return null;
 
-    const _trackingData = trackingData?.map((item) => ({
+    const _trackingData = trackings?.map((item) => ({
       dateChange: item.dateChange,
-      location: item.location.replace("D33 - HỒ CHÍ MINH", "TSN - HỒ CHÍ MINH"),
+      location: `${item.postOfficeID} - ${item.provinceName}`.replace(
+        "D33 - HỒ CHÍ MINH",
+        "TSN - HỒ CHÍ MINH"
+      ),
       statusName: item.statusName,
       notes: item.notes,
     }));
 
-    const extraServices = order?.extraServices?.map((service, index) => ({
+    const extraServices = priceInfo?.map((service, index) => ({
       id: index,
       code: service.serviceID,
       name: service.serviceName,
     }));
 
-    const splitCharacterPrefix = order?.deliveryTo?.startsWith("_")
-      ? order?.deliveryTo?.slice(1)
-      : order.deliveryTo;
+    const splitCharacterPrefix = receiverName?.startsWith("_")
+      ? receiverName?.slice(1)
+      : receiverName;
+
+    const findStatus = BOL_STATUS.find((item) => item.key === statusName);
+
+    const isSuccess = statusName === "PHATTHANHCONG";
 
     const payLoad = {
       sendName: "Bưu cục Tân Sơn Nhất",
       from: "2/10 Hồng hà phường 2 Tân Bình",
-      code: order.orderCode,
-      fromDate: order.acceptedTime,
-      type: order.mailerType,
-      weight: order.realWeight,
+      code: orderCode,
+      fromDate: acceptDate,
+      type: mailerTypeID,
+      weight: realWeight,
       to: "",
-      quantity: order.quantity,
-      description: order.note,
-      status: order.statusName,
+      quantity,
+      description: "",
+      status: trackingName
+        ? findStatus.title
+        : isSuccess
+        ? "Phát thành công"
+        : "Phát thất bại",
       extraServices,
-      path: order.imageURLs?.[0] ?? "",
+      path: confirmImage?.[0] ?? "",
       trackingData: _trackingData,
-      receivedName: splitCharacterPrefix,
+      receivedName: isSuccess ? splitCharacterPrefix : "",
+      reason: delayNote ? [{ name: delayNote, id: 1 }] : [],
     };
     return payLoad;
   }
 
   async detailByExternal(code) {
-    const response = await fetch(
-      "https://tracking-webkh.247express.vn/api/Order/Tracking",
-      {
-        method: "POST",
-        mode: "cors",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          OrderCode: code,
-        }),
-      }
-    );
-    const data = await response.json();
-    return this.convertDataByExternal(data);
+    const res = await externalService.tracking({ OrderCode: code });
+
+    // const response = await fetch(
+    //   "https://tracking-webkh.247express.vn/api/Order/Tracking",
+    //   {
+    //     method: "POST",
+    //     mode: "cors",
+    //     headers: {
+    //       "Content-Type": "application/json",
+    //     },
+    //     body: JSON.stringify({
+    //       OrderCode: code,
+    //     }),
+    //   }
+    // );
+
+    // const data = await response.json();
+    // console.log(res.trackings, data.order);
+
+    return this.convertDataByExternal(res);
   }
 }
 export const BolServices = new BolsServices();
