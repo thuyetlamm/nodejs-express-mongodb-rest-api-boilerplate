@@ -39,6 +39,11 @@ export const BOL_STATUS = [
     title: "Hoàn lại",
     key: "CHOCHUYENHOAN",
   },
+  {
+    id: 7,
+    title: "Hoàn lại",
+    key: "DACHUYENHOAN",
+  },
 ];
 
 export const BOL_STATUS_VI = new Map([

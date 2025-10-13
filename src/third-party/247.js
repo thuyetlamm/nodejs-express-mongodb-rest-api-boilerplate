@@ -85,9 +85,9 @@ class ExternalService {
    *   console.log('Login thành công:', response.ClientID);
    * }
    */
-  async login() {
+  async login(isCache = true) {
     // Kiểm tra cache trước
-    const cachedClientData = await this.getCachedClientData();
+    const cachedClientData = isCache ? await this.getCachedClientData() : null;
     if (cachedClientData && this.isTokenValid(cachedClientData.ExpireDate)) {
       console.log("Sử dụng client token từ cache");
       return cachedClientData;
@@ -257,7 +257,18 @@ class ExternalService {
    */
   async getCachedClientData() {
     try {
-      return await redisService.get(this.#CACHE_KEYS.CLIENT_DATA);
+      const clientData = await redisService.get(this.#CACHE_KEYS.CLIENT_DATA);
+      if (!clientData) {
+        console.log("Không có client data trong cache, gọi API login");
+        const response = await this.login(false);
+        const { ClientID, Token } = response;
+        authen({
+          ClientID,
+          Token,
+        });
+        return response;
+      }
+      return clientData;
     } catch (error) {
       console.error("Lỗi khi lấy client data từ cache:", error);
       return null;
