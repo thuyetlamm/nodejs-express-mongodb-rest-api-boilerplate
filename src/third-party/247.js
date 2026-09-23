@@ -151,8 +151,7 @@ class ExternalService {
    * console.log('Trạng thái đơn hàng:', result.status);
    */
   async tracking({ OrderCode }) {
-    const cachedClientData = await this.getCachedClientData();
-    const apiKey = cachedClientData.TrackingApiKey;
+    const apiKey = process.env.THIRD_PARTY_API_KEY;
 
     const response = await tracking({
       apiKey: apiKey,
